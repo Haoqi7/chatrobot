@@ -15,7 +15,7 @@
 
 </p>
 
-![演示]( <img src="img/b.png" alt="Logo" width="156" height="156"> )
+![演示](<img src="img/b.png" alt="go" width="156" height="156">)
 
 ## ✨ 特性
 
