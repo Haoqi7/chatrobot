@@ -15,7 +15,7 @@
 
 </p>
 
-## 演示 <img src="https://cdn.jsdelivr.net/gh/Haoqi7/imgbed/zishahu/b.png" alt="go" >
+## 演示 <img src="img/b.png" alt="go" >
 
 ## ✨ 特性
 
