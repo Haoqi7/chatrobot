@@ -15,7 +15,7 @@
 
 </p>
 
-## 演示 <img src="img/b.png" alt="go" >
+## 演示 <img src="https://s2.loli.net/2022/04/27/367gLca1C5leMqF.png" alt="go" >
 
 ## ✨ 特性
 
