@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="人工智能">
+<link rel="shortcut icon" href="../img/icon/favicon.ico" type="image/x-ico">
+<title>双屏模式</title>
+<script>
+var mu;//要播放的音乐，在load函数中赋值，muc函数中使用
+function rabbit()
+{	
+	var shuru = document.getElementById('shuru').value;//输入框的内容
+	
+	document.getElementById('dope').value = shuru;
+	ok();
+
+	//当前时间
+	var date = new Date();
+	var hour = date.getHours();
+	var minute = date.getMinutes();
+	var second = date.getSeconds();
+	var now_time = hour + ':' + minute + ':' + second;
+	
+	//ajax方式
+	if(window.XMLHttpRequest)
+	{
+		var panda = new XMLHttpRequest();
+	}
+	else
+	{
+		var panda = new ActiveXObject('Microsoft.XMLHTTP');
+	}
+	panda.onreadystatechange = function()
+		{
+			console.log(panda.readyState);
+			//在ajax方式中，200和4表示正常取值
+			if(panda.status == 200 &&　panda.readyState == 4)
+			{
+				var n = panda.responseText;//结果赋值
+				var arr = n.split('_');//按_符号分割返回值，第一个值arr[0]是回答，第二个值是时间，第三个值是所处位置
+				
+				document.getElementById('temp').value = arr[0];
+				
+				$('.waifu-tips').html(arr[0]).fadeTo(200,1);
+				timeout = 4000;
+				hideMessage(timeout);
+					
+				//文字转语音（自动朗读输出的文字）
+				var ju = document.getElementById("vo");
+				if(ju.checked)
+				{
+					var u = new window.SpeechSynthesisUtterance();
+					u.text = arr[0];
+					u.lang = 'zh-CN'
+					u.voiceURI = 'Google 普通话（中国大陆）';//文字转语音的发音
+					speechSynthesis.speak(u);
+				}
+				
+				document.getElementById('ShowTime').innerHTML = arr[1];//时间
+				document.getElementById('ShowPosition').innerHTML = arr[2];//地点
+				//环境图片
+				if(arr[6] == 1)//地点改变了，环境图片的显示，要做一些特效
+				{
+					//环境图片渐显
+					var tp = document.getElementById('envi');
+					tp.innerHTML = '<img src="' + '../' + arr[3]+'">';
+					var tim=null;
+					var nm=0;
+					var sp=2;
+					clearInterval(tim);
+					tim = setInterval(function()
+					{
+						nm+=sp;
+						if(nm>=200)
+						{
+							nm=200;
+							clearInterval(tim);
+						}
+						tp.style.opacity = nm/100;
+					},42)
+				}
+				else//地点没改变，直接显示环境图片，无特效
+				{
+					document.getElementById('envi').innerHTML = '<img src="' + '../' + arr[3]+'">';//环境图片
+				}
+				
+				if(arr[4] == "a")//休闲服
+				{
+					mu = "../music/mc/mc5.mp3";
+				}
+				else//校服
+				{
+					mu = "../music/mc/mc6.mp3";
+				}
+			}
+		}
+	//ajax方式（更新数据，而不用刷新整个网页），connect.php用于连接和读取数据库，作为对ajax的辅助
+	panda.open('post','../connect.php',true);//post方式传值
+	panda.setRequestHeader('content-type','application/x-www-form-urlencoded');
+	panda.send('sr='+ shuru);
+	
+	document.getElementById('shuru').value="";//传值后，输入框内容清空
+	document.getElementById('shuru').focus();//输入框获得焦点
+}
+
+//音乐播放
+function muc()
+{
+	function music_start()
+	{
+		var player;
+		player = document.getElementById("aud");
+		player.src = mu;
+		player.volume = 0.2;
+	}
+	function music_stop()
+	{
+		var player;
+		player = document.getElementById("aud");
+		player.src = '';
+	}
+	
+	var jud = document.getElementById("mc");
+	if(jud.checked)
+	{
+		music_start();
+	}
+	else
+	{
+		music_stop();
+	}
+}
+</script>
+
+<!--聊天记录和动态人物，都要用jquery库-->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script>
+function ok()
+{
+	var news=$('#dope').val();
+	if(news != '')
+	{
+		$('#dope').val('');
+		var str='';
+		str+='<li>'+
+				'<div class="nesHead"><img src="img/p1.png"/></div>'+
+				'<div class="news">'+news+'</div>'+
+			'</li>';
+		$('.newsList').append(str);
+		setTimeout(answers,1000); 
+		$('.conLeft').find('li.bg').children('.liRight').children('.infor').text(news);
+		$('.RightCont').scrollTop($('.RightCont')[0].scrollHeight );
+	}
+}
+
+function answers()
+{
+	var aa = document.getElementById('temp').value;
+	var answer='';
+	answer+='<li>'+
+				'<div class="answerHead"><img src="img/p2.png"/></div>'+
+				'<div class="answers">'+aa+'</div>'+
+			'</li>';
+	$('.newsList').append(answer);	
+	$('.RightCont').scrollTop($('.RightCont')[0].scrollHeight );
+}
+</script>
+
+<script>
+function cat()
+{
+	document.getElementById('shuru').value = document.getElementById('dope').value;
+	rabbit();
+}
+</script>
+
+<!--网页排版-->
+<link rel="stylesheet" href="../style.css">
+<!--聊天记录-->
+<link rel="stylesheet" href="record.css">
+<!--动态人物-->
+<link rel="stylesheet" type="text/css" href="assets/kawayi.css"/>
+</head>
+
+<body background="../img/bg/bg1.jpg" onLoad="rabbit();">
+
+<div style="position:relative; width:1200px; margin:0 auto;">
+    <!--返回主页-->
+    <div style="position:absolute; left:-48px; top:-8px; z-index:10;">
+        <a href="../index.html"><button class="button orange glass" style="font-size:14px;">返回主页</button></a>
+    </div>
+    
+    <!--主界面-->
+    <div class="card-front" style="left:-240px; top:20px;">
+        <div style="text-align:center; margin:0 auto;">
+            <!--环境图片-->
+            <p id="envi"></p>
+            
+            <!--时间和位置-->
+            <table class="font_1 Time_Position" style="left:210px;">
+            <tr>
+            <td style="color:rgba(137,190,178,0.8);"><p id = "ShowTime"></p></td>
+            <td width="400px"></td>
+            <td style="color:rgba(244,160,158,0.8);"><p id = "ShowPosition"></p></td>
+            </tr>
+            <tr>
+            <td>
+            <div class="font_1 Time_Position" style=" position:relative; width:40px; top:320px; left:235px;"><p style="color:#F66; font-size:36px;">加载中</p></div>
+            </td>
+            </tr>
+            </table>
+            
+            <!--动态人物-->
+            <div class="waifu">
+            <div class="waifu-tips" style="position:relative; width:300px; left:406px; top:664px; font-size:24px; background-color:rgba(23,44,60,0.7); color:#FCF;"></div>
+            <canvas id="live2d" width="450" height="470" class="live2d" style="position:relative; left:372px; top:616px;"></canvas>
+            <div class="waifu-tool" style="left:728px; top:700px;">
+                <!--
+                <span class="fui-home"></span>
+                <span class="fui-chat"></span>
+                <span class="fui-eye"></span>
+                <span class="fui-user"></span>
+                -->
+                <button class="fui-user" style=" position:relative; width:60px; height:30px; top:392px; left:0px;">换肤</button>
+                <!--
+                <span class="fui-photo"></span>
+                <span class="fui-info-circle"></span>
+                <span class="fui-cross"></span>
+                -->
+            </div>
+            </div>
+            <script src="assets/kawayi.js"></script>
+            <script src="assets/live2d.js"></script>
+            <script type="text/javascript">initModel("assets/")</script>
+        </div>            
+    </div>
+          
+    <!--输入框-->
+    <div class="sr" style=" position:absolute; top:650px; left:130px;">
+        <textarea type="text" id="shuru" name="shuru" class="shuru" style="border-radius:6px; box-shadow:inset 0 3px 3px #999;" autofocus></textarea>
+        <button class="button pink round glass" style="font-size:24px; left:7px; top:12px;" onClick="rabbit()">发送</button>
+    </div>
+    
+    <!--声音按钮-->
+    <div style=" position:absolute; width:200px; left:516px; top:0px;">
+        <audio id="aud" autoplay="autoplay"></audio>
+        <div class="toggle--knob">
+            <!--背景音乐-->
+            <input type="checkbox" id="mc" class="toggle--checkbox" onClick="muc()">
+            <label class="toggle--btn" for="mc" style="left:0px;"><span class="toggle--feature" data-label-off="音乐关" data-label-on="音乐开"></span></label>
+            <!--文字转语音-->
+            <input type="checkbox" id="vo" class="toggle--checkbox">
+            <label class="toggle--btn" for="vo" style="left:104px; top:-26px;"><span class="toggle--feature" data-label-off="语音关" data-label-on="语音开"></span></label>
+        </div>
+    </div>
+    
+    <!--聊天记录-->
+    <div style="position:absolute; left:810px; top:26px;">
+        <div class="phone">
+        <div class="phone_bg1">
+        <div class="phone_bg2">
+        <div class="phone_bg3">
+        <div class="phone_lh">
+        <div class="phone_lh_con">
+            <div class="lh_tiao"></div>
+            <div class="lh_yuan"></div>
+        </div>
+        </div>
+        <span class="date_time">心的彼端</span>
+        <div class="states">
+            <ul class="ul_xinhao">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <div class="wifi1">
+            <div class="wifi2">
+            <div class="wifi3">
+            <div class="wifi4">
+            <div class="wifi5">
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            <div class="dianliang"></div>
+        </div>
+        <div class="phone_home"></div>
+        <!--手机界面开始-->
+        <div class="cBox" style="width:373px; height:710px;">
+        <div class="BoxHead">
+            <div class="headImg">
+                <img src="img/a.png">
+            </div>
+            <div class="internetName">聊天记录</div>
+        </div>
+        <div class="context" style="width:100%">
+        <div class="conRight">
+            <div class="RightCont">
+                <ul class="newsList">
+                </ul>
+            </div>
+            <div class="RightFoot">
+                <div class="inputBox">
+                    <textarea id="dope" style="width:368px; height:75px; border:none; outline:none;" name="" rows="" cols="" placeholder="这里也可以输入..."></textarea>
+                    <div style="position:relative; width:100px; left:330px;">
+                    <button onClick="cat()">发送</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+        <!--手机界面结束-->
+        </div>
+        </div>
+        </div>
+        </div>
+    </div>
+    
+    <!--临时数据-->
+    <div><input id="temp" style=" position:absolute; top:200px; left:100px; z-index:-1;"></div>
+    
+</div>
+
+</body>
+</html>

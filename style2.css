@@ -1,0 +1,231 @@
+/*选择器*/
+:root{
+	--bg-color:url(img/bg/bg1.jpg) top center rgba(200,200,200,.5);/*背景图片和背景颜色*/
+	--div-color:url(img/bg/linebg.png) top center #ede6d1;/*内容框的颜色和图片*/
+	--input-color:rgba(200,200,200,0.4);/*输入框颜色*/
+	--button-color:rgba(252,157,154,0.8);/*滑动轴按钮颜色*/
+	--font-color1:#000;/*凹框字体颜色*/
+	--font-color2:rgba(144,152,168,1);/*凸框字体颜色*/
+	--font-weight:normal;/*字体粗细：正常*/
+	--soft-high-light: rgba(255,255,255,.43);
+	--dark-high-light: rgba(217,210,200,.51);
+	--bg-LeftMenu:#f8f8f8;/*左边导航栏 背景*/
+	--LeftMenu-color:#000;/*左边导航栏 文字*/
+	--LeftMenu-hover:#e0e5ec;/*左边导航栏 鼠标悬停*/
+  }
+/*夜晚模式*/
+[data-theme="dark"]{
+	--bg-color:#232323;/*阅读页面的背景颜色*/
+	--div-color:#232323;/*翻转板背面的颜色*/
+	--input-color:#232323;/*输入框颜色*/
+	--button-color:rgba(200,200,169,0.7);/*滑动轴按钮颜色*/
+	--font-color1:rgba(201,186,131,0.9);/*凹框字体颜色*/
+	--font-color2:#c7c7c7;/*凸框字体颜色*/
+	--font-weight:normal;/*字体粗细：正常*/
+	--soft-high-light: rgba(255,255,255,.05);
+	--dark-high-light: rgba(0,0,0,.51);
+	--bg-LeftMenu:rgba(87,96,105,.7);/*左边导航栏 背景*/
+	--LeftMenu-color:#FFF;/*左边导航栏 文字*/
+	--LeftMenu-hover:#333;/*左边导航栏 鼠标悬停*/
+  }
+/*页面背景*/
+body{
+	background: var(--bg-color);
+  }
+  
+/*凹区*/
+.ao{
+	width:600px;
+	box-shadow: 6px 6px 16px 0 var(--dark-high-light), -6px -6px 16px 0 var(--soft-high-light), inset 6px 6px 5px 0 var(--dark-high-light), inset -6px -6px 5px 0 var(--soft-high-light);
+	border: 5px solid var(--soft-high-light);
+	color: var(--font-color1);
+	background:var(--div-color);
+	font-weight:var(--font-weight);
+	border-radius: 12px;
+	padding:16px;
+	font-size:22px;
+	margin:0 auto;
+	}
+/*凸区*/
+.tu{
+	width:800px;
+	box-shadow: 6px 6px 16px 0 var(--dark-high-light), -6px -6px 16px 0 var(--soft-high-light);
+	border: 1px solid var(--soft-high-light);
+	border-radius: 20px;
+	padding:16px;
+	font-size:22px;
+	margin:0 auto;
+	}
+.b:hover{
+	box-shadow: inset 6px 6px 5px 0 var(--dark-high-light), inset -6px -6px 5px 0 var(--soft-high-light);
+	color: var(--font-color1);
+  }
+
+/*白天模式和夜晚模式的切换按钮*/
+.theme-switch{
+	display: inline-block;
+	height: 34px;
+	position: relative;
+	width: 60px;
+  }
+.theme-switch input{
+	display: none;
+  }
+/*切换按钮的边线*/
+.slider{
+	box-shadow: 6px 6px 16px 0 var(--dark-high-light), -6px -6px 16px 0 var(--soft-high-light), inset 6px 6px 5px 0 var(--dark-high-light), inset -6px -6px 5px 0 var(--soft-high-light);
+	background-color: inherit;
+	bottom: 0;
+	cursor: pointer;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition: .4s;
+	border: 2px solid var(--button-color);/*按钮边框颜色*/
+  }
+.slider:before{
+	background-color: var(--button-color);/*按钮颜色*/
+	box-shadow: 0px 0px 5px var(--dark-high-light);
+	bottom: 4px;
+	content: "";
+	height: 22px;
+	left: 4px;
+	position: absolute;
+	transition: .4s;
+	width: 22px;
+  }
+input:checked + .slider{
+	background-color: var(--bg-color);
+	box-shadow: 6px 6px 16px 0 var(--dark-high-light), -6px -6px 16px 0 var(--soft-high-light), inset 6px 6px 5px 0 var(--dark-high-light), inset -6px -6px 5px 0 var(--soft-high-light);
+  }
+input:checked + .slider:before{
+	background-color: var(--font-color1);
+  }
+input:checked + .slider:before{
+	transform: translateX(26px);
+  }
+.slider.round{
+	border-radius: 34px;
+  }
+.slider.round:before{
+	border-radius: 50%;
+  }
+
+/*边框字*/
+.font_1{
+	display:inline-block;
+	font-weight:bold;
+	text-shadow:0 0 1px currentColor,-1px -1px 1px #000,0 -1px 1px #000,1px -1px 1px #000,1px 0 1px #000,1px 1px 1px #000,0 1px 1px #000,-1px 1px 1px #000,-1px 0 1px #000;
+	}
+/*立体字*/
+.font_2{
+	font-weight:bold;
+	text-shadow:0 0 1px currentColor,1px 1px 1px #000,2px 2px 3px #000;
+	}
+/*时间字体*/
+.font_time{
+	color:rgba(30,41,61,0.4);
+	font-size:18px;
+	font-weight:bold; 
+	}
+/*美景模式的按钮*/
+.read{
+	border-radius:6px;
+	font-size:14px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-box-shadow: 6px 5px 24px #666666;
+	-moz-box-shadow: 6px 5px 24px #666666;
+	box-shadow: 6px 5px 24px #666666;
+}
+
+/*左边的垂直导航栏*/
+.LeftMenu {
+	display: -webkit-box;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	flex-direction: column;
+	background: var(--bg-LeftMenu);
+	border-radius: 10px;
+	box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
+}
+.LeftMenu-list {
+	box-sizing: border-box;
+	padding:0;
+	margin:0;
+	list-style-type:none;
+	margin: 0;
+	display: block;
+	width: 100%;
+	padding: 8px;
+}
+.LeftMenu-list + .LeftMenu-list {
+	border-top: 1px solid #ddd;
+}
+.LeftMenu-sub-list {
+	box-sizing: border-box;
+	padding:0;
+	margin:0;
+	list-style-type:none;
+	display: none;
+	padding: 8px;
+	background: var(--bg-LeftMenu);
+	border-radius: 10px;
+	box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
+	position: absolute;
+	left: 100%;
+	right: 0;
+	z-index: 100;
+	width:170px;
+	top: 0;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	  flex-direction: column;
+}
+.LeftMenu-sub-list:hover {
+	display: -webkit-box;
+	display: flex;
+}
+.LeftMenu-item {
+  position: relative;
+}
+.LeftMenu-button {
+	color:var(--LeftMenu-color);
+	font: inherit;
+	border: 0;
+	padding: 8px 8px;
+	padding-right: 36px;
+	width: 100%;
+	border-radius: 8px;
+	display: -webkit-box;
+	display: flex;
+	-webkit-box-align: center;
+		  align-items: center;
+	position: relative;
+	background:none;
+}
+.LeftMenu-button:hover {
+	background-color: var(--LeftMenu-hover);
+}
+.LeftMenu-button:hover + .LeftMenu-sub-list {
+	display: -webkit-box;
+	display: flex;
+}
+.MenuContainer {
+	box-sizing: border-box;
+	padding:10px;
+	list-style-type:none;
+	position:fixed;
+	top: 30%;
+	left:0px;
+	width: 100%;
+	display: -webkit-box;
+	display: flex;
+	-webkit-box-align:left;
+	align-items: left;
+	-webkit-box-pack: left;
+	justify-content: left;
+	vertical-align:middle;  
+}

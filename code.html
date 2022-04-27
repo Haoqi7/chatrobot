@@ -1,0 +1,911 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>基础训练</title>
+<link rel="stylesheet" href="style3.css" type="text/css">
+</head>
+
+<body background="img/bg/linebg.png" bgcolor="#fdfbee" style="text-align:center;">
+<p align="center"><font style="font-size:22px; color:#F99">基础训练</font></p>
+<div class="ao" align="left" style="width:900px; position:relative; margin:0 auto; font-size:18px; font-weight:normal;">
+<!--内容-->
+mysql存储过程：<br>
+先看完基础训练，再看代码，就容易了。<br><br>
+
+<font style="font-size:22px; color:#F99">基础训练1：按指定词语分割句子</font><br>
+CREATE DEFINER=`root`@`localhost` PROCEDURE `z1`()<br>
+BEGIN<br>
+declare say varchar(100);#全句<br>
+
+declare start1char varchar(10);#句子开始的1个字符<br>
+declare start2char varchar(10);#句子开始的2个字符<br>
+declare last1char varchar(10);#句子最后的1个字符<br>
+declare last2char varchar(10);#句子最后的2个字符<br>
+<br>
+declare word varchar(10);#分割词<br>
+declare position_start varchar(10);#分割词在句中的开始位置<br>
+declare word_length varchar(10);#分割词的长度<br>
+declare position_last varchar(10);#分割词在句中的结束位置<br>
+declare word_left varchar(10);#分割词左边句<br>
+declare word_right varchar(10);#分割词右边句<br>
+<br>
+declare word_left1 varchar(3);#分割词左边1个字符<br>
+declare word_left2 varchar(6);#分割词左边2个字符<br>
+declare word_right1 varchar(3);#分割词右边1个字符<br>
+declare word_right2 varchar(6);#分割词右边2个字符<br>
+<br>
+declare word2 varchar(10);#第2个分割词<br>
+declare word2_left varchar(50);#第2个分割词的左边句<br>
+declare word1_word2 varchar(50);#两个分割词之间的内容<br>
+declare word_con varchar(10);#词语连接<br>
+<br>
+set say = "abcdefg";
+<br>
+/*<br>
+函数说明：substring(全句,截取的位置,截取的长度)<br>
+截取的位置：正数从左数，负数从右数<br>
+截取的长度：从左向右数<br>
+*/<br>
+set start1char = substring(say,1,1);#句子开始的1个字符<br>
+set start2char = substring(say,1,2);#句子开始的2个字符<br>
+set last1char = substring(say,-1,1);#句子最后的1个字符<br>
+set last2char = substring(say,-2,2);#句子最后的2个字符<br>
+<br>
+-- 分割词<br>
+set word = "d";<br>
+<br>
+-- 按分割词截取<br>
+set position_start = instr(say,word);#分割词在句中的开始位置<br>
+set word_length = char_length(word);#分割词的长度<br>
+set position_last = position_start + word_length;#分割词在句中的结束位置<br>
+set word_left = substring(say,1,position_start-1);#分割词左边句<br>
+set word_right = substring(say,position_last);#分割词右边句<br>
+-- 合并，这样仅需要全句和分割词两个参数<br>
+set word_left = substring(say,1,instr(say,word)-1);#分割词左边句<br>
+-- 或word_left = substring_index(say,word,1);<br>
+set word_right = substring(say,instr(say,word) + char_length(word));#分割词右边句<br>
+-- 或word_right = substring_index(say,word,-1);<br>
+<br>
+-- 单个字符<br>
+set word_left1 = "";<br>
+set word_left1 = substring(word_left,-1,1);#分割词左边1个字符<br>
+set word_left2 = substring(word_left,-2,2);#分割词左边2个字符<br>
+set word_right1 = substring(word_right,1,1);#分割词右边1个字符<br>
+set word_right2 = substring(word_right,1,2);#分割词右边2个字符<br>
+-- 展开，这样仅需要全句和分割词两个参数<br>
+set word_left1 = substring(substring(say,1,instr(say,word)-1),-1,1);<br>
+set word_left2 = substring(substring(say,1,instr(say,word)-1),-2,2);<br>
+set word_right1 = substring(substring(say,instr(say,word) + char_length(word)),1,1);<br>
+set word_right2 = substring(substring(say,instr(say,word) + char_length(word)),1,2);<br>
+<br>
+-- 再添加一个分割词word2<br>
+set word2 = "f";<br>
+/*<br>
+函数说明：substring_index(全句,截取的字符,第几次出现该字符)<br>
+这个函数是以第n次出现的分割词，从右向左截取句子，如果要从左向右，第三个参数填负数<br>
+*/<br>
+set word2_left = substring_index(say,word2,1);<br>
+<br>
+-- 两个分割词之间的内容：substring_index(substring_index(全句,分割词1,-1),分割词2,1)<br>
+set word1_word2 = substring_index(substring_index(say,word,-1),word2,1);<br>
+<br>
+-- 词语连接<br>
+-- 函数说明：concat(要连接起来的各个词语)<br>
+set word_con = concat(word,"-",word2);<br>
+<br>
+-- 显示结果<br>
+select say,start1char,start2char,last1char,last2char,<br>
+word,position_start,word_length,position_last,word_left,word_right,<br>
+word_left1,word_left2,word_right1,word_right2,<br>
+word2,word2_left,word1_word2,word_con;<br>
+<br>
+/*显示的值：<br>
+say:abcdefg<br>
+start1char：a<br>
+start2char：ab<br>
+last1char：g<br>
+last2char：fg<br>
+word：d<br>
+position_start：4<br>
+word_length：1<br>
+position_last：5<br>
+word_left：abc<br>
+word_right：efg<br>
+word_left1：c<br>
+word_left2：bc<br>
+word_right1：e<br>
+word_right2：ef<br>
+word2：f<br>
+word2_left：abcde<br>
+word1_word2：e<br>
+word_con：d-f<br>
+*/<br>
+<br>
+END<br>
+<br>
+<hr>
+<br>
+
+<font style="font-size:22px; color:#F99">基础训练2：游标的使用</font><br>
+这个存储过程用于找到句子中包含的名词。<br>
+在主谓宾句型中，先找动词，后找名词。动词左边的名词就是主语，动词右边的名词就是宾语。这样，主谓宾都找到了。<br><br>
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `z2`()<br>
+BEGIN<br>
+/*<br>
+游标可以一行行逐个从词语表中读取词语<br>
+游标有个缺点，符合条件的最后一行，会重复读2次，为了防止重复，可以加个old_word变量<br>
+判断句子是否有属于名词表的词，既名词表的词是否出现在句子里<br>
+*/<br>
+declare say varchar(100);#输入的话语<br>
+declare find_word varchar(10);#要找的词<br>
+declare old_word varchar(10);#游标上次读取的值<br>
+declare basket varchar(10);#临时变量，用于存储游标读出的数据<br>
+declare sign int default 0;#游标变量，0表示没有没有读取到底，1表示读取到底<br>
+declare noun_fish cursor for select word_col from noun;#游标：找名词<br>
+declare continue handler for not found set sign = 1;#继续读取，读取到底，使sign值变1<br>
+<br>
+set say = "可爱的兔子蹦蹦跳跳";#前提是名词表里已经有名词“兔子”<br>
+set find_word = "";#要找的词，默认为空。如果经过游标程序，依然为空，就说明没找到<br>
+set sign = 0;#0表示游标还没有读到底<br>
+set old_word= "";#初始化为空<br>
+set basket = "";#游标从表格中，每次读出的一个数据，放入临时变量basket中<br>
+open noun_fish;#打开游标<br>
+while sign != 1 do#开始循环，游标还没有读到底（sign为0，不为1），就一直循环操作<br>
+    fetch noun_fish into basket;#把读到的值放入临时变量basket中<br>
+  -- 函数说明：instr(全句,词语)，如果词语包含在句子中，返回值大于0（词语在句子中的位次），否则返回值等于0<br>
+    if instr(say,basket) > 0 and basket != old_word then#游标这次从表格中读出的词语，包含在句子中，且与上次读到的值不一样<br>
+        set find_word = basket;#找到了，就赋值<br>
+        set old_word = basket;#现在找到的新词，对下一次循环来说，就是旧词了<br>
+  end if;<br>
+end while;#结束循环<br>
+close noun_fish;#关闭游标<br>
+<br>
+-- 显示结果<br>
+select find_word;<br>
+/*显示的值<br>
+find_word：兔子<br>
+*/<br>
+<br>
+END<br>
+<br>
+<hr>
+<br>
+
+<font style="font-size:22px; color:#F99">基础训练3：动态SQL</font><br>
+CREATE DEFINER=`root`@`localhost` PROCEDURE `z3`()<br>
+BEGIN<br>
+-- 动态SQL就是把一堆SQL指令片段拼接在一起去执行，可以让SQL灵活的用啥拼啥<br>
+declare n1 varchar(100);<br>
+declare n2 varchar(100);<br>
+declare n3 varchar(100);<br>
+declare n4 varchar(100);<br>
+declare n5 varchar(100);<br>
+declare n varchar(500);<br>
+declare result varchar(10);<br>
+<br>
+set n1 = "select object_col ";<br>
+set n2 = "from know ";<br>
+set n3 = "where subject_col = ";<br>
+set n4 = "'猫'";#双引号里要加单引号<br>
+set n5 = " limit 1";#只要一个结果<br>
+set result = "";#默认为空值<br>
+<br>
+set n = concat(n1,n2,n3,n4,n5);#p1的值为select subject_col from know where subject_col = '猫' limit1<br>
+set @p1 = n;<br>
+prepare p2 FROM @p1;#准备<br>
+execute p2 ;#执行查询<br>
+deallocate prepare p2;#释放<br>
+set result = @p3;#获取结果<br>
+<br>
+-- 显示结果<br>
+select result;<br>
+<br>
+-- 显示的值<br>
+-- result：鼠<br>
+<br>
+END<br>
+<br>
+<hr>
+<br>
+
+<font style="font-size:22px; color:#F99">基础训练4：select时，常用的函数</font><br>
+CREATE DEFINER=`root`@`localhost` PROCEDURE `z4`()<br>
+BEGIN<br>
+/*<br>
+select的对象的值，不能是NULL值。如果是NULL值，就会报错，所以要用IFNULL函数<br>
+所以select subject_col from know的安全写法（避免报错的写法）是select IFNULL(subject_col,'') from know<br>
+IFNULL(列名,'')意思是把列中找到的NULL值，变为空值，这样就避报错<br>
+<br>
+空值和NULL的区别:<br>
+计算行数count(列名)时，如果遇到NULL就忽略不计（跳过），但是遇到空值要记为一行数据<br>
+存储上，空值不占存储空间，而NULL值要占存储空间<br>
+可见，空值表示没有，NULL表示忽略<br>
+空值用 = 和 != 比较，而NULL值只能用is和is not比较<br>
+<br>
+group_concat函数：select时，把同一列的多个查询结果，连接到一起，成为一个聚合值<br>
+<br>
+concat_ws函数；select时，把同一行上，不同列的查询结果，连接到一起，成为一个聚合值<br>
+concat_ws('分隔符',列名1,列名2)<br>
+<br>
+如果输入set result = (select object_col from know where subject_col = '猫');会报错，因为返回值不止一个<br>
+解决方法1：用group_concat函数，把所有返回值，拼接成一个返回值<br>
+解决方法2：写limit 1 就只返回第一个返回值<br>
+*/<br>
+<br>
+declare result varchar(100);<br>
+declare result2 varchar(100);<br>
+declare result3 varchar(100);<br>
+<br>
+set result = (select group_concat(object_col) from know where subject_col = '猫');<br>
+-- 再复杂一点：返回值不要有重复值，用distinct<br>
+set result2 = (select group_concat(distinct object_col) from know where subject_col = '猫');<br>
+<br>
+-- 把三列的结果，以逗号连接到一起，作为一个结果返回<br>
+set result3 = (select concat_ws(',',verb1_col,verb2_col,object_col) from know where subject_col = '猫' limit 1);<br>
+<br>
+-- 显示结果<br>
+select result,result2,result3;#把多个返回值拼接到一起返回<br>
+<br>
+END<br>
+<hr>
+<br>
+
+<font style="font-size:22px; color:#F99">基础训练5：最简单句型的语义理解和问答</font><br>
+CREATE DEFINER=`root`@`localhost` PROCEDURE `z5`()<br>
+BEGIN<br>
+-- 基础训练：最基本的语义理解和问答<br>
+-- 定义变量<br>
+declare say varchar(100);#输入的话语<br>
+declare subject_find varchar(10);#主语<br>
+declare verb_find varchar(10);#谓语动词<br>
+declare object_find varchar(10);#宾语<br>
+<br>
+declare left_part varchar(100);#谓语动词左边的句子<br>
+declare right_part varchar(100);#谓语动词右边的句子<br>
+<br>
+declare sl_col varchar(100);#动态sql中，select要查询的列的内容<br>
+declare wr varchar(100);#动态sql中，select的条件where的内容<br>
+declare s1 varchar(500);#动态sql中，临时变量，s1内容量大<br>
+<br>
+declare judge varchar(10);#判断要插入表的数据，表中是否已存在<br>
+<br>
+declare reply varchar(100);#电脑的回答（回答语义理解）<br>
+declare answer varchar(100);#电脑的回答（普通方式问答）<br>
+declare answer2 varchar(100);#电脑的回答（动态sql方式问答）<br>
+<br>
+-- 定义游标<br>
+declare old_word varchar(10);#游标上次读取的值<br>
+declare basket varchar(10);#临时变量，用于存储游标读出的数据<br>
+declare sign int default 0;#游标变量，0表示没有没有读取到底，1表示读取到底<br>
+declare noun_fish cursor for select word_col from noun;#游标：找名词（从名词表noun的word_col列寻找）<br>
+declare verb_fish cursor for select word_col from verb;#游标：找动词（从动词表verb的word_col列寻找）<br>
+declare continue handler for not found set sign = 1;#继续读取，读取到底，使sign值变1<br>
+<br>
+
+-- 变量初始化<br>
+set say = "白色的猫吃黑色的鼠";#输入的语句<br>
+set subject_find = "";#主语初始化为空值<br>
+set verb_find = "";#谓语动词初始化为空值<br>
+set object_find = "";#宾语初始化为空值<br>
+set left_part = "";#谓语动词左边句初始化为空值<br>
+set right_part = "";#谓语动词右边句初始化为空值<br>
+set sl_col = "";#select对象内容初始化为空值<br>
+set wr = "";#条件where的内容初始化为空值<br>
+set s1 = "";#动态sql的临时变量初始化为空值<br>
+set judge = "";#judge变量用于判断要插入表中的数据是否已存在于表中，初始化为空<br>
+set reply = "";#电脑的回答（语义理解）初始化为空值<br>
+set answer = "";#电脑的回答（普通方式问答）初始化为空值<br>
+set answer2 = "";#电脑的回答（动态sql方式问答）初始化为空值<br>
+<br>
+
+-- 第一步：找谓语动词<br>
+set sign = 0;#0表示游标还没有读到底<br>
+set old_word= "";#初始化为空<br>
+set basket = "";#游标从表格中，每次读出的一个数据，放入临时变量basket中<br>
+open verb_fish;#打开找动词的游标<br>
+while sign != 1 do#开始循环，游标还没有读到底（sign为0，不为1），就一直循环操作<br>
+&nbsp;&nbsp;	fetch verb_fish into basket;#把读到的值放入临时变量basket中<br>
+&nbsp;&nbsp;  -- 函数说明：instr(全句,词语)，如果词语包含在句子中，返回值大于0（词语在句子中的位次），否则返回值等于0<br>
+&nbsp;&nbsp;	if instr(say,basket) > 0 and basket != old_word then#游标这次从表格中读出的词语，包含在句子中，且与上次读到的值不一样<br>
+&nbsp;&nbsp;		set verb_find = basket;#找到了词语“吃”，就赋值给动词<br>
+&nbsp;&nbsp;		set old_word = basket;#现在找到的新词，对下一次循环来说，就是旧词了<br>
+&nbsp;&nbsp;  end if;<br>
+end while;#结束循环<br>
+close verb_fish;#关闭游标<br>
+<br>
+/*<br>
+第二步：按谓语动词分割句子<br>
+谓语动词左边句找到的名词，就是主语<br>
+谓语动词右边句找到的名词，就是宾语<br>
+*/<br>
+if verb_find != "" then#找到了谓语动词“吃”<br>
+&nbsp;&nbsp;	-- 按分割词分割句子的方法，前面存储过程z1已经讲过了<br>
+&nbsp;&nbsp;	set left_part = substring(say,1,instr(say,verb_find)-1);#分割词（谓语动词“吃”）的左边句，既“白色的猫”<br>
+&nbsp;&nbsp;	set right_part = substring(say,instr(say,verb_find) + char_length(verb_find));#分割词（谓语动词“吃”）的右边句，既“黑色的鼠”<br>
+	<br>
+&nbsp;&nbsp;	-- 第三步：谓语动词左边句（left_part）中，找主语<br>
+&nbsp;&nbsp;	set sign = 0;#0表示游标还没有读到底<br>
+&nbsp;&nbsp;	set old_word= "";#初始化为空<br>
+&nbsp;&nbsp;	set basket = "";#游标从表格中，每次读出的一个数据，放入临时变量basket中<br>
+&nbsp;&nbsp;	open noun_fish;#打开找名词的游标<br>
+&nbsp;&nbsp;	while sign != 1 do#开始循环，游标还没有读到底（sign为0，不为1），就一直循环操作<br>
+&nbsp;&nbsp;		fetch noun_fish into basket;#把读到的值放入临时变量basket中<br>
+&nbsp;&nbsp;		-- 函数说明：instr(全句,词语)，如果词语包含在句子中，返回值大于0（词语在句子中的位次），否则返回值等于0<br>
+&nbsp;&nbsp;		if instr(left_part,basket) > 0 and basket != old_word then#游标这次从表格中读出的词语，包含在句子中，且与上次读到的值不一样<br>
+&nbsp;&nbsp;			set subject_find = basket;#找到了词语“猫”，就赋值给主语<br>
+&nbsp;&nbsp;			set old_word = basket;#现在找到的新词，对下一次循环来说，就是旧词了<br>
+&nbsp;&nbsp;		end if;<br>
+&nbsp;&nbsp;	end while;#结束循环<br>
+&nbsp;&nbsp;	close noun_fish;#关闭游标<br>
+	<br>
+&nbsp;&nbsp;	-- 第四步：谓语动词右边句（right_part）中，找宾语<br>
+&nbsp;&nbsp;	set sign = 0;#0表示游标还没有读到底<br>
+&nbsp;&nbsp;	set old_word= "";#初始化为空<br>
+&nbsp;&nbsp;	set basket = "";#游标从表格中，每次读出的一个数据，放入临时变量basket中<br>
+&nbsp;&nbsp;	open noun_fish;#打开找名词的游标<br>
+&nbsp;&nbsp;	while sign != 1 do#开始循环，游标还没有读到底（sign为0，不为1），就一直循环操作<br>
+&nbsp;&nbsp;		fetch noun_fish into basket;#把读到的值放入临时变量basket中<br>
+&nbsp;&nbsp;		-- 函数说明：instr(全句,词语)，如果词语包含在句子中，返回值大于0（词语在句子中的位次），否则返回值等于0<br>
+&nbsp;&nbsp;		if instr(right_part,basket) > 0 and basket != old_word then#游标这次从表格中读出的词语，包含在句子中，且与上次读到的值不一样<br>
+&nbsp;&nbsp;			set object_find = basket;#找到了词语“鼠”，就赋值给宾语<br>
+&nbsp;&nbsp;			set old_word = basket;#现在找到的新词，对下一次循环来说，就是旧词了<br>
+&nbsp;&nbsp;		end if;<br>
+&nbsp;&nbsp;	end while;#结束循环<br>
+&nbsp;&nbsp;	close noun_fish;#关闭游标<br>
+	<br>
+&nbsp;&nbsp;	-- 第五步：把找到的主谓宾，插入到知识表中<br>
+&nbsp;&nbsp;	-- 如果要插入表中的数据，已存在于表中，judge就会被赋值，否则judge的值为空值或NULL值<br>
+&nbsp;&nbsp;	-- limit 1表示只要一个返回结果，如果返回多个结果就会报错<br>
+&nbsp;&nbsp;	set judge = (select subject_col from know where verb1_col = verb_find and object_col = object_find limit 1);<br>
+&nbsp;&nbsp;	-- 如果表中没有此数据，才插入<br>
+&nbsp;&nbsp;	if judge = "" or judge is NULL then<br>
+&nbsp;&nbsp;		insert into know(subject_col,verb1_col,object_col) values(subject_find,verb_find,object_find);<br>
+&nbsp;&nbsp;	end if;<br>
+	<br>
+&nbsp;&nbsp;	-- 第六步：电脑的回答（语义理解）<br>
+&nbsp;&nbsp;	set reply = concat("主语：",subject_find," 谓语动词：",verb_find," 宾语：",object_find);#concat函数用于连接字符串和变量<br>
+	<br>
+else#没有找到谓语动词<br>
+&nbsp;&nbsp;	set reply = "没有谓语动词";#电脑的回答<br>
+end if;<br>
+<br>
+/*<br>
+第七步（方式一）：普通方式问答<br>
+用户输入“什么吃鼠”<br>
+按前面的方法，找到主语是词语“什么”，谓语动词是词语“吃”，宾语是词语“鼠”<br>
+前提是词语“什么”，已经作为名词，存入名词表中<br>
+提问主语，那么select的对象就是主语，where条件的对象是谓语动词“吃”和宾语“鼠”<br>
+*/<br>
+set say = "什么吃鼠";<br>
+-- 找寻方法（语义理解）就不重复写了，按前面的方法就行，下面只写找寻结果<br>
+set subject_find = "什么";#主语为“什么”<br>
+set verb_find = "吃";#谓语动词为“吃”<br>
+set object_find = "鼠";#宾语为“鼠”<br>
+<br>
+if subject_find = "什么" then#提问主语，如果用户输入“什么吃鼠”，那么此时subject_find就为“什么”<br>
+&nbsp;&nbsp;	-- 知识表中，主语作为select的对象，谓语动词和宾语作为select的条件（where条件）<br>
+&nbsp;&nbsp;	set answer = (select subject_col from know where verb1_col = verb_find and object_col = object_find limit 1);<br>
+elseif verb_find = "怎么" then#提问谓语动词，如果用户输入“猫怎么鼠”，那么此时verb_find就为“怎么”<br>
+&nbsp;&nbsp;	-- 知识表中，谓语动词作为select的对象，主语和宾语作为select的条件（where条件）<br>
+&nbsp;&nbsp;	set answer = (select verb1_col from know where subject_col = subject_find and object_col = object_find limit 1);<br>
+elseif object_find = "什么" then#提问宾语，如果用户输入“猫吃什么”，那么此时object_find就为“什么”<br>
+&nbsp;&nbsp;	-- 知识表中，宾语作为select的对象，主语和谓语动词作为select的条件（where条件）<br>
+&nbsp;&nbsp;	set answer = (select object_col from know where subject_col = subject_find and verb1_col = verb_find limit 1);<br>
+end if;<br>
+<br>
+
+/*<br>
+第七步（方式二）：动态sql方式问答<br>
+动态sql方式，就是根据需要，组装sql指令碎片，形成查询程序，然后执行<br>
+*/<br>
+if subject_find = "什么" then<br>
+&nbsp;&nbsp;	set sl_col = "subject_col";#select的对象列为subject_col<br>
+&nbsp;&nbsp;	/*<br>
+&nbsp;&nbsp;	如果subject_col为没有值，就会返回NULL值，就会报错<br>
+&nbsp;&nbsp;	所以最好把select subject_col写为select IFNULL(subject_col,'')<br>
+&nbsp;&nbsp;	这样的话，如果subject_col为NULL值时，就会替换成空值，而防止报错<br>
+&nbsp;&nbsp;	因此最好写为sl_col = "IFNULL(subject_col,'')";<br>
+&nbsp;&nbsp;	注意：双引号"里要包单引号'，双引号里不能包双引号，单引号里又可以包双引号<br>
+&nbsp;&nbsp;	concat函数连接字符串和变量，逗号把各部分连接在一起<br>
+&nbsp;&nbsp;	变量verb_find左右，都要有单引号'包着，因为执行时，verb_find的内容是'吃'<br>
+&nbsp;&nbsp;	这里的concat把8个部分连接在一起，逗号是各部分的分隔符<br>
+&nbsp;&nbsp;	第1个部分：verb1_col = <br>
+&nbsp;&nbsp;	第2个部分：'<br>
+&nbsp;&nbsp;	第3个部分：verb_find<br>
+&nbsp;&nbsp;	第4个部分：'<br>
+&nbsp;&nbsp;	第5个部分：and object_col =<br>
+&nbsp;&nbsp;	第6个部分：'<br>
+&nbsp;&nbsp;	第7个部分：object_find<br>
+&nbsp;&nbsp;	第8个部分：'<br>
+&nbsp;&nbsp;	这8部分执行时为verb1_col = '吃' and object_col = '鼠'<br>
+&nbsp;&nbsp;	这8部分就是select语句中，条件where的内容<br>
+&nbsp;&nbsp;	执行时，变量verb_find已经替换为吃，变量object_find已经替换为鼠<br>
+&nbsp;&nbsp;	*/<br>
+&nbsp;&nbsp;	set wr = concat("verb1_col = ","'",verb_find,"'"," and object_col = ","'",object_find,"'");<br>
+elseif verb_find = "怎么" then#如果提问词是谓语“怎么”，例如猫怎么鼠。可见不同的提问词，产生的动态sql指令不同<br>
+&nbsp;&nbsp;	set sl_col = "verb1_col"#select的对象列为谓语动词列，既verb1_col<br>
+&nbsp;&nbsp;	set wr = concat("subject_col = ","'",subject_find,"'"," and object_col = ","'",object_find,"'");<br>
+elseif object_find = "什么" then#如果提问词是宾语“什么”，例如猫吃什么<br>
+&nbsp;&nbsp;	set sl_col = "object_col";#select的对象列为宾语列，既object_col<br>
+&nbsp;&nbsp;	set wr = concat("subject_col = ","'",subject_find,"'"," and verb1_col = ","'",verb_find,"'");<br>
+end if;<br>
+/*<br>
+sql碎片组装成sql指令<br>
+变量sl_col存放的是select的对象列<br>
+变量wr存放的是where的条件内容<br>
+group_concat函数是吧多个返回值拼接成一个返回值<br>
+separator '、'表示这些返回值用顿号（、）隔开<br>
+distinct表示不要重复的值，保证每个值都不一样<br>
+into @find 是吧select的查询结果，放到变量find里<br>
+from know 是从知识表know里查询<br>
+动态sql的语法规则是有些古怪<br>
+先要prepare准备，然后execute执行，最后deallocate prepare释放变量<br>
+有些变量必须加@，有些变量不用加@<br>
+s1要定义，带@号的不用定义，prepare对象（s3）也不用定义<br>
+*/<br>
+set s1 = concat("select group_concat(distinct ",sl_col," separator '、') into @find from know where ",wr);<br>
+set @s2 = s1;<br>
+prepare s3 FROM @s2;#准备<br>
+execute s3 ;#执行查询<br>
+deallocate prepare s3;#释放<br>
+set answer2 = @find;#获取结果<br>
+<br>
+
+-- 第八步：输出结果<br>
+select reply,answer,answer2;<br>
+/*<br>
+显示：<br>
+reply：主语：猫 谓语动词：吃 宾语：鼠<br>
+answer：猫<br>
+answer2：猫<br>
+*/<br>
+<br>
+
+END<br>
+<br>
+<hr>
+<br>
+
+<font style="font-size:22px; color:#F99">基础训练6：按标点符号分割段落</font><br>
+说明：这段新算法，我还没有更新到服务器的数据库。等我发新版本时，会更新此为新算法<br>
+CREATE DEFINER=`root`@`localhost` PROCEDURE `z6`()<br>
+BEGIN<br>
+-- 基础训练：按标点符号（逗号、句号、问号、感叹号）分割句子<br>
+declare say varchar(300);#输入的话语<br>
+declare sp1 varchar(100);#第一次循环，按逗号分割句子，所得到的分割句。sp是split的简写<br>
+declare sp2 varchar(100);#第二次循环，按句号分割句子，所得到的分割句<br>
+declare sp3 varchar(100);#第三次循环，按问号分割句子，所得到的分割句<br>
+declare sp4 varchar(100);#第四次循环，按感叹号分割句子，所得到的分割句<br>
+<br>
+declare i1 int;#第一次循环的循环变量<br>
+declare i2 int;#第二次循环的循环变量<br>
+declare i3 int;#第三次循环的循环变量<br>
+declare i4 int;#第四次循环的循环变量<br>
+<br>
+declare sentence varchar(100);#符号（。，？！）分成的每个单句<br>
+declare n1 varchar(100);#第1个单句<br>
+declare n2 varchar(100);#第2个单句<br>
+declare n3 varchar(100);#第3个单句<br>
+declare n4 varchar(100);#第4个单句<br>
+declare n5 varchar(100);#第5个单句<br>
+declare n6 varchar(100);#第6个单句<br>
+<br>
+-- 初始化<br>
+set say = "猫在院子里玩，看见了一只鼠。竟然有老鼠！猫走过去，猫会吃它吗？肯定会的。";<br>
+set n1 = "";<br>
+set n2 = "";<br>
+set n3 = "";<br>
+set n4 = "";<br>
+set n5 = "";<br>
+set n6 = "";<br>
+<br>
+/*<br>
+第一次循环：先按逗号分割句子。因为段落中，逗号最多，能分出最多的段<br>
+第二次循环：逗号分割出的分割段中，再用句号进一步分割<br>
+第三次循环：句号分割出的分割段中，再用问号进一步分割<br>
+第四次循环：问号分割出的分割段中，再用感叹号进一步分割<br>
+四次循环下来，就是单句了，存放于sp4中<br>
+*/<br>
+-- 第一层循环：按逗号分割句子，循环次数取决于逗号把句子分成的段落数<br>
+set sp1 = "";<br>
+set i1 = 0;<br>
+/*<br>
+长度1：char_length(say)::既原本句子的长度<br>
+长度2：char_length(REPLACE(say,'，',''))，既逗号被变空（去掉逗号）后，句子的长度<br>
+replace是替换函数，把say中的逗号，替换为空无<br>
+那么长度1减长度2，就是逗号数量。之后再加1，就是逗号把句子分割成的段落数。为什么要加1？因为2个逗号分割出3段，而不是2段<br>
+当循环变量i1小于逗号把句子分成的段落数，就执行循环，循环结束后，i1会增加1，直到每个段落都被处理完，既i1增加到与段落数量值相等<br>
+*/<br>
+while i1 < char_length(say)-char_length(REPLACE(say,'，',''))+1 do<br>
+&nbsp;&nbsp;	set sp1 = SUBSTRING_INDEX(SUBSTRING_INDEX(say,'，',i1+1),'，',-1);#sp：split，逗号把句子分成的段<br>
+	<br>
+&nbsp;&nbsp;	-- 第二循环：按句号分割句子<br>
+&nbsp;&nbsp;	set sp2 = "";<br>
+&nbsp;&nbsp;	set i2 = 0;<br>
+&nbsp;&nbsp;	while i2 < char_length(sp1)-char_length(REPLACE(sp1,'。',''))+1 do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;		set sp2 = SUBSTRING_INDEX(SUBSTRING_INDEX(sp1,'。',i2+1),'。',-1);<br>
+		<br>
+&nbsp;&nbsp;&nbsp;&nbsp;		-- 第三层循环：按问号分割句子<br>
+&nbsp;&nbsp;&nbsp;&nbsp;		set sp3 = "";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;		set i3 = 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;		while i3 < char_length(sp2)-char_length(REPLACE(sp2,'？',''))+1 do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			set sp3 = SUBSTRING_INDEX(SUBSTRING_INDEX(sp2,'？',i3+1),'？',-1);<br>
+			<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			-- 第四层循环：按感叹号分割句子<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			set sp4 = "";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			set i4 = 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			while i4 < char_length(sp3)-char_length(REPLACE(sp3,'！',''))+1 do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				set sp4 = SUBSTRING_INDEX(SUBSTRING_INDEX(sp3,'！',i4+1),'！',-1);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				-- 现在，按符号分割句子完成，已都是符号分出的单句sp4<br>
+				<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				-- 给每个单句赋值<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				if n1 = "" then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;					set n1 = sp4;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				elseif n2 = "" then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				set n2 = sp4;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			elseif n3 = "" then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				set n3 = sp4;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				elseif n4 = "" then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;					set n4 = sp4;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				elseif n5 = "" then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;					set n5 = sp4;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				elseif n6 = "" then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;					set n6 = sp4;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				end if;<br>
+                <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				-- 单句处理完成<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				set i4 = i4 + 1;#循环变量自增1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			end while;#结束第四层循环<br>
+            <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;			set i3 = i3 + 1;#循环变量自增1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;		end while;#结束第三层循环<br>
+        <br>
+&nbsp;&nbsp;&nbsp;&nbsp;		set i2 = i2 + 1;#循环变量自增1<br>
+&nbsp;&nbsp;	end while;#结束第二层循环<br>
+    <br>
+&nbsp;&nbsp;	set i1 = i1 + 1;#循环变量自增1<br>
+end while;#结束第一层循环<br>
+<br>
+-- 输出结果<br>
+select n1,n2,n3,n4,n5,n6;<br>
+/*<br>
+显示的值：<br>
+n1：猫在院子里玩<br>
+n2：看见一只老鼠<br>
+n3：竟然有老鼠<br>
+n4：猫走过去<br>
+n5：猫会吃它吗<br>
+n6：肯定会的<br>
+*/<br>
+<br>
+END<br>
+<br>
+<hr>
+<br>
+
+<font style="font-size:22px; color:#F99">基础训练7：词语槽</font><br>
+CREATE DEFINER=`root`@`localhost` PROCEDURE `z7`()<br>
+BEGIN<br>
+-- 基础训练：词语槽<br>
+declare say varchar(100);#输入的话语<br>
+declare noun1_basket varchar(10);#名词槽1<br>
+declare noun2_basket varchar(10);#名词槽2<br>
+declare noun3_basket varchar(10);#名词槽3<br>
+declare noun4_basket varchar(10);#名词槽4<br>
+<br>
+-- 游标（从词库逐个读取词语）<br>
+declare cover int;<br>
+declare basket varchar(10);#临时变量，用于存储游标读出的数据<br>
+declare sign int default 0;#游标变量，0表示没有没有读取到底，1表示读取到底<br>
+declare noun_fish cursor for select word_col from noun;#游标：找名词<br>
+declare continue handler for not found set sign = 1;#继续读取，读取到底，使sign值变1<br>
+<br>
+-- 初始化<br>
+set say = "熊猫吃竹子";<br>
+set noun1_basket = "";<br>
+set noun2_basket = "";<br>
+set noun3_basket = "";<br>
+set noun4_basket = "";<br>
+<br>
+/*<br>
+游标找名词，有时会出现一种错误：<br>
+例如词语“熊猫”，会被当成三个名词：熊、猫、熊猫，这样就不对了，解决方法：<br>
+长词（游标找到的新词）覆盖短词（已找的旧词）：“熊猫”覆盖“熊”和“猫”<br>
+长词（已找的旧词）吸收短词（游标找到的新词）：“熊猫”吸收“熊”和“猫”<br>
+这样最后只有一个名词：熊猫，不会出现熊、猫<br>
+游标新词，赋值或覆盖或被吸收后，变量cover从0变1，这是为了避免向新的空名词槽再次赋值<br>
+*/<br>
+-- 找名词<br>
+set sign = 0;#0表示游标还没有读到底<br>
+set basket = "";#游标从表格中，每次读出的一个数据，放入临时变量basket中<br>
+open noun_fish;#打开游标<br>
+while sign != 1 do#开始循环，游标还没有读到底（sign为0，不为1），就一直循环操作<br>
+&nbsp;&nbsp;	fetch noun_fish into basket;#把读到的值放入临时变量basket中<br>
+&nbsp;&nbsp;	-- 如果游标从词语表读出的词，包含在句子中<br>
+&nbsp;&nbsp;	if instr(say,basket) > 0 then<br>
+&nbsp;&nbsp;			set cover = 0;#控制basket只能给新的空名词槽赋值一次<br>
+&nbsp;&nbsp;			<br>
+&nbsp;&nbsp;			-- 名词槽1<br>
+&nbsp;&nbsp;			if noun1_basket = "" then#第一个槽子就是空的，后面几个槽子更是空的<br>
+&nbsp;&nbsp;				set noun1_basket = basket;#游标找到名词（熊猫，或熊，或猫），给槽子赋值，占据名词槽1<br>
+&nbsp;&nbsp;				set cover = 1;#赋值后，占据标志变为1<br>
+&nbsp;&nbsp;				/*<br>
+&nbsp;&nbsp;				下面的else，表示第一个槽子已经有值了（之前已被其它名词占据）<br>
+&nbsp;&nbsp;				那就要考虑词语的覆盖和吸收：<br>
+&nbsp;&nbsp;				如果这次游标找到的名词是熊猫，而之前槽子里的词是熊，就要长词覆盖短词<br>
+&nbsp;&nbsp;				如果这次游标找到的名词是熊，而之前槽子里的词是熊猫，就要长词吸收短词<br>
+&nbsp;&nbsp;				*/<br>
+&nbsp;&nbsp;			else<br>
+&nbsp;&nbsp;				/*<br>
+&nbsp;&nbsp;				instr(basket,noun1_basket) > 0表示basket（游标找到的新词）包含noun1_basket（名词槽1的已有名词）<br>
+&nbsp;&nbsp;				也就是说，游标找的新词（熊猫）包含槽子里的旧词（熊），所以长词（basket）覆盖短词(noun1_basket)，长词（熊猫）成为槽子里的新词<br>
+&nbsp;&nbsp;				*/<br>
+&nbsp;&nbsp;				if instr(basket,noun1_basket) > 0 then<br>
+&nbsp;&nbsp;					set noun1_basket = basket;<br>
+&nbsp;&nbsp;					set cover = 1;<br>
+&nbsp;&nbsp;				/*<br>
+&nbsp;&nbsp;				instr(noun1_basket,basket) > 0表示noun1_basket（名词槽1已有名词）包含basket（游标找到的新词）<br>
+&nbsp;&nbsp;				也就是说，槽子里的旧词（熊猫）包含了游标找到的新词（熊），所以长词（noun1_basket）吸收短词（basket），也就是不赋值，保留原值<br>
+&nbsp;&nbsp;				*/<br>
+&nbsp;&nbsp;				elseif instr(noun1_basket,basket) > 0 then<br>
+&nbsp;&nbsp;					set cover = 1;<br>
+&nbsp;&nbsp;				end if;<br>
+&nbsp;&nbsp;			end if;<br>
+&nbsp;&nbsp;			<br>
+&nbsp;&nbsp;			-- 名词槽2<br>
+&nbsp;&nbsp;			if noun2_basket = "" then<br>
+&nbsp;&nbsp;				if cover = 0 then<br>
+&nbsp;&nbsp;					set noun2_basket = basket;<br>
+&nbsp;&nbsp;					set cover = 1;<br>
+&nbsp;&nbsp;				end if;<br>
+&nbsp;&nbsp;			else<br>
+&nbsp;&nbsp;				if instr(basket,noun2_basket) > 0 then<br>
+&nbsp;&nbsp;					if cover = 0 then<br>
+&nbsp;&nbsp;					set noun2_basket = basket;<br>
+&nbsp;&nbsp;						set cover = 1;<br>
+&nbsp;&nbsp;					else<br>
+&nbsp;&nbsp;						set noun2_basket = "";<br>
+&nbsp;&nbsp;					end if;<br>
+&nbsp;&nbsp;				elseif instr(noun2_basket,basket) > 0 then<br>
+&nbsp;&nbsp;					set cover = 1;<br>
+&nbsp;&nbsp;				end if;<br>
+&nbsp;&nbsp;			end if;<br>
+&nbsp;&nbsp;			<br>
+&nbsp;&nbsp;			-- 名词槽3<br>
+&nbsp;&nbsp;			if noun3_basket = "" then<br>
+&nbsp;&nbsp;				if cover = 0 then<br>
+&nbsp;&nbsp;					set noun3_basket = basket;<br>
+&nbsp;&nbsp;					set cover = 1;<br>
+&nbsp;&nbsp;				end if;<br>
+&nbsp;&nbsp;			else<br>
+&nbsp;&nbsp;				if instr(basket,noun3_basket) > 0 then<br>
+&nbsp;&nbsp;					if cover = 0 then<br>
+&nbsp;&nbsp;						set noun3_basket = basket;<br>
+&nbsp;&nbsp;						set cover = 1;<br>
+&nbsp;&nbsp;					else<br>
+&nbsp;&nbsp;						set noun3_basket = "";<br>
+&nbsp;&nbsp;					end if;<br>
+&nbsp;&nbsp;				elseif instr(noun3_basket,basket) > 0 then<br>
+&nbsp;&nbsp;					set cover = 1;<br>
+&nbsp;&nbsp;				end if;<br>
+&nbsp;&nbsp;			end if;<br>
+			<br>
+&nbsp;&nbsp;			-- 名词槽4<br>
+&nbsp;&nbsp;			if noun4_basket = "" then<br>
+&nbsp;&nbsp;				if cover = 0 then<br>
+&nbsp;&nbsp;					set noun4_basket = basket;<br>
+&nbsp;&nbsp;					set cover = 1;<br>
+&nbsp;&nbsp;				end if;<br>
+&nbsp;&nbsp;			else<br>
+&nbsp;&nbsp;				if instr(basket,noun4_basket) > 0 then<br>
+&nbsp;&nbsp;					if cover = 0 then<br>
+&nbsp;&nbsp;						set noun4_basket = basket;<br>
+&nbsp;&nbsp;					set cover = 1;<br>
+&nbsp;&nbsp;					else<br>
+&nbsp;&nbsp;						set noun4_basket = "";<br>
+&nbsp;&nbsp;					end if;<br>
+&nbsp;&nbsp;				elseif instr(noun4_basket,basket) > 0 then<br>
+&nbsp;&nbsp;					set cover = 1;<br>
+&nbsp;&nbsp;				end if;<br>
+&nbsp;&nbsp;			end if;<br>
+		<br>
+&nbsp;&nbsp;	end if;<br>
+<br>
+end while;#结束循环<br>
+close noun_fish;#关闭游标<br>
+<br>
+-- 输出结果<br>
+select noun1_basket,noun2_basket,noun3_basket,noun4_basket;<br>
+/*<br>
+noun1_basket：熊猫<br>
+noun2_basket：竹子<br>
+noun3_basket：空值<br>
+noun4_basket：空值<br>
+这样就不会出现名词：熊、猫<br>
+*/<br>
+<br>
+END<br>
+<br>
+<hr>
+<br>
+<font style="font-size:22px; color:#F99">基础训练8：找出话语中的数字</font><br>
+CREATE DEFINER=`root`@`localhost` PROCEDURE `z8`()<br>
+BEGIN<br>
+-- 基础训练：找数词<br>
+-- 先找数词单位，数词单位左边就是数字<br>
+declare say varchar(100);#输入的话语<br>
+declare num varchar(10);#数字<br>
+declare unit varchar(10);#数词单位<br>
+<br>
+declare unit_left varchar(50);#数词单位的左边<br>
+declare unit_left_length int;#数词单位的左边的字符串的长度<br>
+<br>
+declare i int;#要检测的字符位置<br>
+declare n varchar(3);#单个字符的内容<br>
+declare w int;#判断字符是否是数字<br>
+<br>
+-- 游标<br>
+declare basket varchar(20);#临时变量，用于存储游标读出的数据<br>
+declare sign int default 0;#游标变量，0表示没有没有读取到底，1表示读取到底<br>
+declare unit_fish cursor for select unit_col from other_word;#游标：找数词单位<br>
+declare continue handler for not found set sign = 1;#继续读取，读取到底，使sign值变1<br>
+<br>
+-- 初始化<br>
+set say = "山上有162只猫";<br>
+set num = "";<br>
+set unit = "";<br>
+set unit_left = "";<br>
+set unit_left_length = 0;<br>
+<br>
+-- 游标操作<br>
+set sign = 0;<br>
+set basket = "";<br>
+open unit_fish;<br>
+while sign != 1 do<br>
+&nbsp;&nbsp;	fetch unit_fish into basket;<br>
+&nbsp;&nbsp;	if instr(say,basket) > 0 then#找到数词单位<br>
+&nbsp;&nbsp;		set unit = basket;<br>
+		<br>
+&nbsp;&nbsp;		-- 开始找数字<br>
+&nbsp;&nbsp;		set unit_left = substring_index(say,unit,1);#数词单位左边的字符串<br>
+&nbsp;&nbsp;		set unit_left_length = char_length(unit_left);#数词单位左边内容的长度。数字在数词单位左边，所以往左边看<br>
+&nbsp;&nbsp;		set i = 1;#数词单位左边的内容的从右向左数第1个字符，例如64个，i=1时，n的值是4，i=2时，n的值是6<br>
+&nbsp;&nbsp;		lable_num: begin#设置标记，为了后面跳出循环<br>
+&nbsp;&nbsp;			-- 循环是逐个字符的操作，从第1个字符（i=1），一直到左边最后一个字符。unit_left_length就是最后一个字符的位置<br>
+&nbsp;&nbsp;			while(i <= unit_left_length) do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;				set n = substring(unit_left,-i,1);#该字符的内容，-i是从右向左计算<br>
+&nbsp;&nbsp;&nbsp;&nbsp;				-- FIND_IN_SET函数判断一个字符（变量n中的字符），是否属于字符集合（双引号里的数字）中的一个<br>
+&nbsp;&nbsp;&nbsp;&nbsp;				set w = FIND_IN_SET(n,"0,1,2,3,4,5,6,7,8,9,零,一,二,两,三,四,五,六,七,八,九,十,百,千,万,亿,兆");#如果该字符属于集合中的数字，返回值就大于0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;				if w > 0 then #该字符为数字<br>
+&nbsp;&nbsp;&nbsp;&nbsp;					set num = concat(n,num);#每次循环新找的数字字符，要与之前的数字字符拼接。因为数字往往不止是一个字符，例如64就是2个字符，需要把6和4拼接到一起<br>
+&nbsp;&nbsp;&nbsp;&nbsp;				else#遇到不是数字的字符，就该跳出循环了。例如山上有162只猫，从数词单位“只”向左找数字，遇到“有”字，找数字就结束了，找到的数字是162<br>
+&nbsp;&nbsp;&nbsp;&nbsp;					leave lable_num;#跳出循环<br>
+&nbsp;&nbsp;&nbsp;&nbsp;			end if;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;				set i = i + 1;#要检测的字符位置，向左移动一位，为了看看下一个字符是否还是数字<br>
+&nbsp;&nbsp;			end while;<br>
+&nbsp;&nbsp;		end lable_num;#跳出循环后，到这里<br>
+		<br>
+&nbsp;&nbsp;	end if;<br>
+end while;<br>
+close unit_fish;<br>
+<br>
+-- 输出结果<br>
+select num,unit;<br>
+/*<br>
+num：162<br>
+unit：只<br>
+*/<br>
+<br>
+END<br>
+<hr>
+<br>
+
+<font style="font-size:22px; color:#F99">基础训练9：词性辨析</font><br>
+CREATE DEFINER=`root`@`localhost` PROCEDURE `z9`()<br>
+BEGIN<br>
+/* <br>
+基础训练：动词的词性辨析<br>
+词性辨析是多种方法并用，现在介绍其中一种方法<br>
+词性辨析表（verb_judge）有4列<br>
+id：编号<br>
+word_col：要判断的动词，看它到底是不是动词<br>
+type_col：动词的左右位置<br>
+content_col：动词左右位置的字符<br>
++----------+----------+-------------+<br>
+&nbsp;| word_col | type_col | content_col |<br>
++----------+----------+-------------+<br>
+&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;r1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;校&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
++----------+----------+-------------+<br>
+&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;生&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;l1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;花&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
++----------+----------+-------------+<br>
+“学”字右边1个字符（r1）是“校”字时，“学”字不做动词，因为“学校”是名词<br>
+“生”字左边1个字符（l1）是“花”字时，“生”字不做动词，因为“花生”是名词<br>
+*/<br>
+declare say varchar(100);#用户输入的话语<br>
+declare verb varchar(10);#要判断的动词<br>
+declare not_verb int;#是否为动词：0：是动词，1：非动词<br>
+<br>
+declare left_part varchar(50);#分割词（动词）左边句子<br>
+declare right_part varchar(50);#分割词右边句子<br>
+declare left_1char varchar(3);#分割词左边第1个字符<br>
+declare left_2char varchar(6);#分割词左边的2个字符<br>
+declare left_3char varchar(9);#分割词左边的3个字符<br>
+declare right_1char varchar(3);#分割词右边1个字符<br>
+declare right_2char varchar(6);#分割词右边2个字符<br>
+declare right_3char varchar(9);#分割词右边3个字符<br>
+<br>
+declare type_data varchar(10);#r1、l1、r2、l2等标识<br>
+<br>
+-- 游标<br>
+declare basket varchar(10);<br>
+declare sign int default 0;#游标变量，0表示没有没有读取到底，1表示读取到底<br>
+declare horse cursor for select content_col from verb_judge where word_col = verb;#游标<br>
+declare continue handler for not found set sign = 1;#继续读取，读取到底，使sign值变1<br>
+<br>
+-- 初始化<br>
+set say = "美丽的学校";<br>
+set verb = "学";<br>
+set not_verb = 0;#默认是动词<br>
+set left_part = "";<br>
+set right_part = "";<br>
+set left_1char = "";<br>
+set left_2char = "";<br>
+set left_3char = "";<br>
+set right_1char = "";<br>
+set right_2char = "";<br>
+set right_3char = "";<br>
+set type_data = "";<br>
+<br>
+-- 句子分割<br>
+-- verb左边的句子<br>
+set left_part = substring(say,1,instr(say,verb)-1);<br>
+-- verb右边的句子<br>
+set right_part = substring(say,instr(say,verb) + char_length(verb));<br>
+-- verb左边的1个字符<br>
+set left_1char = substring(left_part,-1,1);<br>
+-- verb左边的2个字符<br>
+set left_2char = substring(left_part,-2,2);<br>
+-- verb左边的3个字符<br>
+set left_3char = substring(left_part,-3,3);<br>
+-- verb右边的1个字符<br>
+set right_1char = substring(right_part,1,1);<br>
+-- verb右边的2个字符<br>
+set right_2char = substring(right_part,1,2);<br>
+-- verb右边的3个字符<br>
+set right_3char = substring(right_part,1,3);<br>
+<br>
+-- 按判断表（verb_judge）来判断<br>
+-- word_col是要判断的字词（动词），type_col是左右位置，content_col是左右位置的字词，数据符合就不是动词了<br>
+set sign = 0;<br>
+set basket = "";<br>
+open horse;<br>
+while sign != 1 do<br>
+&nbsp;&nbsp;	fetch horse into basket;<br>
+&nbsp;&nbsp;  -- 变量verb范围里,basket是游标读出的content_col的一个内容。三列条件知道两个，可以找出剩下一列（type_col）的一个内容<br>
+&nbsp;&nbsp;  set type_data = (select type_col from verb_judge where word_col = verb and content_col = basket limit 1);<br>
+&nbsp;&nbsp;  if type_data = "r1" and basket = right_1char then#三个数据都对应上了<br>
+&nbsp;&nbsp;		set not_verb = 1;#不是动词<br>
+&nbsp;&nbsp;  elseif type_data = "l1" and basket = left_1char then<br>
+&nbsp;&nbsp;		set not_verb = 1;<br>
+&nbsp;&nbsp;	elseif type_data = "r2" and basket = right_2char then<br>
+&nbsp;&nbsp;		set not_verb = 1;<br>
+&nbsp;&nbsp;	elseif type_data = "l2" and basket = left_2char then<br>
+&nbsp;&nbsp;		set not_verb = 1;<br>
+&nbsp;&nbsp;	elseif type_data = "r3" and basket = right_3char then<br>
+&nbsp;&nbsp;		set not_verb = 1;<br>
+&nbsp;&nbsp;	end if;<br>
+end while;<br>
+close horse;<br>
+<br>
+-- 输出数据<br>
+select not_verb;<br>
+-- not_verb：1，表示“美丽的学校”中的“学”字不是动词<br>
+<br>
+END<br>
+<br>
+
+</div>
+</body>
+</html>

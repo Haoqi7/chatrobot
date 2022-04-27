@@ -1,0 +1,143 @@
+{
+    "mouseover": [
+        {
+            "selector": ".container a[href^='http']",
+            "text": ["信息0"]
+        },
+        {
+            "selector": ".fui-home",
+            "text": ["信息1"]
+        },
+        {
+            "selector": "#tor_show",
+            "text": ["信息2"]
+        },
+        {
+            "selector": "#comment_go,.fui-chat",
+            "text": ["信息3"]
+        },
+        {
+            "selector": "#night_mode",
+            "text": ["信息4"]
+        },
+        {
+            "selector": "#qrcode",
+            "text": ["信息5"]
+        },
+        {
+            "selector": ".comment_reply",
+            "text": ["信息6"]
+        },
+        {
+            "selector": "#back-to-top",
+            "text": ["信息7"]
+        },
+        {
+            "selector": "#author",
+            "text": ["信息8"]
+        },
+        {
+            "selector": "#mail",
+            "text": ["信息9"]
+        },
+        {
+            "selector": "#url",
+            "text": ["信息10"]
+        },
+        {
+            "selector": "#textarea",
+            "text": ["信息11"]
+        },
+        {
+            "selector": ".OwO-logo",
+            "text": ["信息12"]
+        },
+        {
+            "selector": "#csubmit",
+            "text": ["信息13"]
+        },
+        {
+            "selector": ".ImageBox",
+            "text": ["信息14"]
+        },
+        {
+            "selector": "input[name=s]",
+            "text": ["信息15"]
+        },
+        {
+            "selector": ".previous",
+            "text": ["信息16"]
+        },
+        {
+            "selector": ".next",
+            "text": ["信息17"]
+        },
+        {
+            "selector": ".dropdown-toggle",
+            "text": ["信息18"]
+        },
+        {
+            "selector": "c-player a.play-icon",
+            "text": ["信息19"]
+        },
+        {
+            "selector": "c-player div.time",
+            "text": ["信息20"]
+        },
+        {
+            "selector": "c-player div.volume",
+            "text": ["信息21"]
+        },
+        {
+            "selector": "c-player div.list-button",
+            "text": ["信息22"]
+        },
+        {
+            "selector": "c-player div.lyric-button",
+            "text": ["信息23"]
+        },
+        {
+            "selector": ".waifu #live2d",
+            "text": ["按使用说明，否则无法问答"]
+        }
+    ],
+    "click": [
+        {
+            "selector": ".waifu #live2d",
+            "text": ["按使用说明，否则无法问答"]
+        }
+    ],"seasons": [
+        {
+            "date": "01/01",
+            "text": "<span style=\"color:#0099cc;\">元旦</span>，{year}年~"
+        },
+        {
+            "date": "02/14",
+            "text": "<span style=\"color:#0099cc;\">情人节</span>，{year}年"
+        },
+        {
+            "date": "03/08",
+            "text": "<span style=\"color:#0099cc;\">妇女节</span>"
+        },
+        {
+            "date": "03/12",
+            "text": "<span style=\"color:#0099cc;\">植树节</span>"
+        },
+        {
+            "date": "04/01",
+            "text": "<span style=\"background-color:#34495e;\">愚人节</span>"
+        },
+        {
+            "date": "05/01",
+            "text": "<span style=\"color:#0099cc;\">劳动节</span>"
+        },
+        {
+            "date": "06/01",
+            "text": "<span style=\"color:#0099cc;\">儿童节</span>"
+        },
+        {
+            "date": "10/01",
+            "text": "<span style=\"color:#0099cc;\">国庆节</span>"
+        }
+    ]
+}

@@ -1,0 +1,5 @@
+[
+null,
+{"id":1,"battlerName":"zhe","characterIndex":0,"characterName":"zhe","classId":1,"equips":[0,0,0,0,0],"faceIndex":0,"faceName":"zhe","traits":[],"initialLevel":1,"maxLevel":99,"name":"阿哲","nickname":"阿哲","note":"","profile":""},
+{"id":2,"battlerName":"y","characterIndex":0,"characterName":"y","classId":2,"equips":[0,0,0,0,0],"faceIndex":0,"faceName":"y","traits":[],"initialLevel":1,"maxLevel":99,"name":"阿玉","nickname":"阿玉","note":"","profile":""}
+]

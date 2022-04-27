@@ -1,0 +1,24 @@
+{
+    "models": [
+        "",
+        "",
+        [
+            "ShizukuTalk/shizuku-48",
+            "ShizukuTalk/shizuku-pajama"
+        ],
+        [
+            "HyperdimensionNeptunia/neptune_classic",
+            "HyperdimensionNeptunia/nepnep",
+            "HyperdimensionNeptunia/nepmaid",
+            "HyperdimensionNeptunia/nepgear"
+        ],
+        ""
+    ],
+    "messages": [
+        "mes1",
+        "mes2",
+        "mes3",
+        "mes4",
+        "mes5"
+    ]
+}

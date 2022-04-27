@@ -1,0 +1,1159 @@
+/*翻转板外框架：area1*/
+.area1{
+  position: relative;
+  width: 800px;/*长度*/
+  max-width: 100%;
+  height: 600px;/*宽度*/
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  perspective: 1000px;/*兼容性不够强，但是去掉后，翻转效果降低*/
+  margin-top: 60px;
+  margin:0 auto;
+  }
+
+/*输入框*/
+.sr {
+	width: 450px;
+	padding: 8px;
+	margin: 0 auto;
+	margin-top:40px;
+	overflow: hidden;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #dedede #bababa #aaa #bababa;
+	-moz-box-shadow: 0 3px 3px rgba(255,255,255,.1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444;
+	-webkit-box-shadow: 0 3px 3px rgba(255,255,255,.1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444;
+	box-shadow: 0 3px 3px rgba(255,255,255,.1), 0 3px 0 #bbb, 0 4px 0 #aaa, 0 5px 5px #444;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	background-color:rgba(200,200,200,0.4);
+}
+
+.sr #shuru{
+	width: 330px;
+	height: 80px;
+	padding: 10px 5px;
+	float: left;    
+	font-size:20px;
+	font-weight:700;
+	color:rgba(51,64,89,1);
+	border: 1px solid #ccc;
+	-moz-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
+	-webkit-box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
+	box-shadow: 0 1px 1px #ddd inset, 0 1px 0 #fff;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;      
+}
+
+.sr #shuru:focus {
+	outline: 0; 
+	border-color: #aaa;
+	-moz-box-shadow: 0 1px 1px #bbb inset;
+	-webkit-box-shadow: 0 1px 1px #bbb inset;
+	box-shadow: 0 1px 1px #bbb inset;
+}
+
+.sr #shuru::-webkit-input-placeholder {
+   color: #CCC;
+   font-weight: normal;
+}
+
+.sr #shuru:-moz-placeholder {
+	color: #999;
+	font-weight: normal;
+}
+
+.sr #shuru:-ms-input-placeholder {
+	color: #999;
+	font-weight: normal;
+}
+	
+/*背板文本框*/
+.txa{
+	width:770px;
+	/*height:571px;*/
+	background:#FFFAFA;
+	box-shadow: 6px 6px 16px 0 rgba(217,210,200,.51), -6px -6px 16px 0 rgba(255,255,255,.43), inset 6px 6px 5px 0 rgba(217,210,200,.51), inset -6px -6px 5px 0 rgba(255,255,255,.43);
+	border: 4px solid rgba(255,255,255,.43);
+	color: rgba(51,64,89,1);
+	margin:0 auto;
+	margin-top:16px;
+	font-size:18px;
+	font-weight:bold;
+	padding:10px;
+	}
+	
+/*翻转板内框架：area2*/
+.area2 {
+  width: 100%;
+  height: 100%;
+  position:absolute;    
+  top: 0;
+  left: 0px;/*需居中，里面是环境图片和人物图片*/
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  transition: all 600ms ease-out;
+  }
+
+/*翻转板（翻转area2）*/
+/*checkbox复选框，选中则翻转，不显示*/
+[type="checkbox"]:checked,
+[type="checkbox"]:not(:checked){
+  position: absolute;
+  left:50%;
+  top:200px;
+  z-index:-1;
+  display: none;
+  }
+.checkbox:checked + label,
+.checkbox:not(:checked) + label{
+  position: relative;
+  display: block;
+  text-align: center;
+  width: 60px;
+  height: 16px;
+  border-radius: 8px;
+  padding: 0;
+  margin: 0px auto;
+  left:0px;
+  top:0px;/*按钮高度*/
+  cursor: pointer;
+  background-color:rgba(87,96,105,0.5);/*滚轴颜色*/
+  }
+.checkbox:checked + label:before,
+.checkbox:not(:checked) + label:before{
+  position: absolute;
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color:rgba(30,41,61,0.6);/*按钮颜色*/
+  font-family: 'unicons';
+  content: '→';
+  color:#FFF;
+  top: -9px;
+  left: -10px;
+  line-height: 36px;
+  text-align: center;
+  font-size: 24px;
+  transition: all 0.5s ease;
+  }
+.checkbox:checked + label:before{
+  transform: translateX(44px) rotate(-270deg);
+  }
+
+/*翻转板前后*/
+.card-front, .card-back{
+  width: 100%;
+  height: 100%;
+  background:rgba(200,200,200,.0);
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  position: absolute;
+  border-radius: 6px;
+  left: 0;
+  top: 0;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden;
+  }
+.card-back{
+  transform: rotateY(180deg);
+  }
+.checkbox:checked ~ .area1 .area2{
+  transform: rotateY(180deg);
+  }
+
+/*时间和位置*/
+.Time_Position{
+	position:absolute;
+	top:20px;
+	left:20px;
+	bottom:0;
+	right:0;
+	font-size:22px;
+	font-weight:bold;
+	}
+
+/*嘴型变化*/
+.mouth{
+	position:absolute;
+	top:316px;/*嘴的位置*/
+	left:260px;/*嘴的位置*/
+	bottom:0;
+	right:0;
+	opacity:0;/*不透明度*/
+	-webkit-animation-name: fadeInOut;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-duration: 1.5s;/*变化时间*/
+	-webkit-animation-iteration-count:1;
+    -webkit-animation-direction: alternate;
+	}
+@-webkit-keyframes fadeInOut {
+    0% {
+        opacity:1;
+     }
+    80% {
+        opacity: 1;    
+    }
+    100% {
+        opacity:0;
+    }
+}
+
+/*对话框（输出框）*/
+.say{
+	width:610px;
+	height:94px;
+	font-size:24px;
+	border-radius:20px;
+	text-align:center;
+	color:#FFF;
+	border-color:transparent;
+	}
+
+/*文字特效*/
+/*边框字*/
+.font_1{
+	display:inline-block;
+	font-weight:bold;
+	text-shadow:0 0 1px currentColor,-1px -1px 1px #000,0 -1px 1px #000,1px -1px 1px #000,1px 0 1px #000,1px 1px 1px #000,0 1px 1px #000,-1px 1px 1px #000,-1px 0 1px #000;
+	}
+/*立体字*/
+.font_2{
+	font-weight:bold;
+	text-shadow:0 0 1px currentColor,1px 1px 1px #000,2px 2px 3px #000;
+	}
+/*荧光字*/
+.font_3{
+	text-shadow: 0 0 2px #fff,
+	0 0 3px  #fff,
+	0 0 5px  #fff,
+	0 0 8px  #D7FFFF,
+	0 0 12px #D7FFFF,
+	0 0 17px #D7FFFF,
+	0 0 23px #D7FFFF;
+	}
+
+/*半透明div*/
+.btm{
+	margin:0 auto;
+	width:800px;
+	padding:16px;
+	border-radius:20px;
+	background-color:rgba(200,200,200,0.4);
+	box-shadow:0 0 0,5px 0 10px #666666,0 5px 10px #666666;
+	}
+
+/*拍手按钮*/
+.paw-button {
+  --background: rgba(255,102,153,0.8);
+  --background-active: #FEE8F4;
+  --border: #F1ECEB;
+  --border-active: #EEC2DB;
+  --text: rgb(255,255,255);
+  --heart-background: #fff;
+  --heart-background-active: #FEA5D7;
+  --heart-border: #C3C2C0;
+  --heart-border-active: #2B2926;
+  --heart-shadow-light: #FEE0F2;
+  --heart-shadow-dark: #EA5DAF;
+  --paw-background: #fff;
+  --paw-border: #201E1B;
+  --paw-shadow: #EEEDED;
+  --paw-inner: var(--heart-background-active);
+  --paw-shadow-light: var(--heart-shadow-light);
+  --paw-shadow-dark: var(--heart-shadow-dark);
+  --paw-clap-background: #FEF0A5;
+  --paw-clap-border: var(--paw-border);
+  --paw-clap-shadow: #FED75C;
+  --circle: #df3dce;
+  --circle-line: #000;
+  display: inline-flex;
+  text-decoration: none;
+  font-size:18px;
+  font-weight: bold;
+  position: relative;
+  line-height: 19px;
+  padding: 12px 16px;
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  -webkit-box-shadow: 6px 5px 24px #666666;
+  -moz-box-shadow: 6px 5px 24px #666666;
+  box-shadow: 6px 5px 24px #666666;
+}
+.paw-button:before {
+  content: '';
+  position: absolute;
+  display: block;
+  left: -2px;
+  top: -2px;
+  bottom: -2px;
+  right: -2px;
+  border-radius: 5px;
+  transition: background .45s, border-color .45s;
+  background: var(--background);
+  border: 2px solid var(--border);
+}
+.paw-button svg {
+  display: block;
+}
+.paw-button .text {
+  position: relative;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+  margin-right: 8px;
+  transition: width .25s;
+  width: var(--w, 50px);
+}
+.paw-button .text span,
+.paw-button .text svg {
+  transition: opacity .2s, -webkit-transform .15s ease-out;
+  transition: transform .15s ease-out, opacity .2s;
+  transition: transform .15s ease-out, opacity .2s, -webkit-transform .15s ease-out;
+  opacity: var(--o, 1);
+}
+.paw-button .text span {
+  display: block;
+  position: absolute;
+  left: 13px;
+  top: 0;
+  -webkit-transform: translateY(var(--y, 0));
+          transform: translateY(var(--y, 0));
+  color: var(--text);
+}
+.paw-button .text svg {
+  --background: var(--heart-background);
+  --border: var(--heart-border);
+  --shadow-light: transparent;
+  --shadow-dark: transparent;
+  width: 21px;
+  height: 19px;
+  -webkit-transform: translateX(var(--x));
+          transform: translateX(var(--x));
+}
+.paw-button > span {
+  display: block;
+  position: relative;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+  color: var(--number);
+}
+.paw-button .paws {
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60px;
+}
+.paw-button .paws svg {
+  position: absolute;
+  bottom: 0;
+  transition: opacity .2s, -webkit-transform .3s ease-out;
+  transition: transform .3s ease-out, opacity .2s;
+  transition: transform .3s ease-out, opacity .2s, -webkit-transform .3s ease-out;
+  opacity: var(--o, 0);
+  -webkit-transform: translate(var(--x, 0), var(--y, 0));
+          transform: translate(var(--x, 0), var(--y, 0));
+}
+.paw-button .paws svg.paw {
+  --x: -24px;
+  width: 30px;
+  height: 37px;
+  left: 32px;
+}
+.paw-button .paws svg.paw-clap {
+  --x: 16px;
+  --y: 34px;
+  --o: 1;
+  width: 29px;
+  height: 34px;
+  left: 34px;
+}
+.paw-button .paws .paw-effect {
+  left: 26px;
+  top: 12px;
+  width: 44px;
+  height: 44px;
+  position: absolute;
+}
+.paw-button .paws .paw-effect:before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--circle);
+  -webkit-transform: scale(var(--s, 0));
+          transform: scale(var(--s, 0));
+  opacity: var(--o, 1);
+  transition: opacity .2s linear .25s, -webkit-transform .15s ease .16s;
+  transition: transform .15s ease .16s, opacity .2s linear .25s;
+  transition: transform .15s ease .16s, opacity .2s linear .25s, -webkit-transform .15s ease .16s;
+}
+.paw-button .paws .paw-effect div {
+  width: 2px;
+  height: 6px;
+  border-radius: 1px;
+  left: 50%;
+  bottom: 50%;
+  margin-left: -1px;
+  position: absolute;
+  background: var(--circle-line);
+  -webkit-transform: translateY(-24px) scaleX(0.7) scaleY(var(--s, 0));
+          transform: translateY(-24px) scaleX(0.7) scaleY(var(--s, 0));
+}
+.paw-button .paws .paw-effect div:before, .paw-button .paws .paw-effect div:after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  border-radius: inherit;
+  -webkit-transform: translate(var(--x, -22px), var(--y, 4px)) rotate(var(--r, -45deg)) scaleX(0.8) scaleY(var(--s, 0));
+          transform: translate(var(--x, -22px), var(--y, 4px)) rotate(var(--r, -45deg)) scaleX(0.8) scaleY(var(--s, 0));
+}
+.paw-button .paws .paw-effect div:after {
+  --x: 22px;
+  --r: 45deg;
+}
+.paw-button .paws .paw-effect div,
+.paw-button .paws .paw-effect div:before,
+.paw-button .paws .paw-effect div:after {
+  opacity: var(--o, 1);
+  -webkit-transform-origin: 50% 100%;
+          transform-origin: 50% 100%;
+  transition: opacity .18s linear .21s, -webkit-transform .12s ease .17s;
+  transition: transform .12s ease .17s, opacity .18s linear .21s;
+  transition: transform .12s ease .17s, opacity .18s linear .21s, -webkit-transform .12s ease .17s;
+}
+.paw-button i {
+  position: absolute;
+  display: block;
+  width: 4px;
+  height: 4px;
+  top: 50%;
+  left: 50%;
+  margin: -2px 0 0 -2px;
+  opacity: var(--o, 0);
+  background: var(--b);
+  -webkit-transform: translate(var(--x), var(--y)) scale(var(--s, 1));
+          transform: translate(var(--x), var(--y)) scale(var(--s, 1));
+}
+.paw-button:not(.confetti):hover .text {
+  --o: 0;
+  --x: 12px;
+  --y: 8px;
+}
+.paw-button:not(.confetti):hover .paws svg.paw {
+  --o: 1;
+  --x: 0;
+}
+.paw-button.animation .text {
+  --o: 0;
+}
+.paw-button.animation .text svg {
+  --background: var(--heart-background-active);
+  --border: var(--heart-border-active);
+  --shadow-light: var(--heart-shadow-light);
+  --shadow-dark: var(--heart-shadow-dark);
+}
+.paw-button.animation .paws svg.paw {
+  --x: 0;
+  --o: 1;
+  transition-delay: 0s;
+  -webkit-animation: paw .45s ease forwards;
+          animation: paw .45s ease forwards;
+}
+.paw-button.animation .paws svg.paw-clap {
+  -webkit-animation: paw-clap .5s ease-in forwards;
+          animation: paw-clap .5s ease-in forwards;
+}
+.paw-button.animation .paws .paw-effect {
+  --s: 1;
+  --o: 0;
+}
+.paw-button.confetti i {
+  -webkit-animation: confetti .6s ease-out forwards;
+          animation: confetti .6s ease-out forwards;
+}
+.paw-button.confetti .paws svg.paw {
+  --o: 0;
+  transition: opacity .15s linear .2s;
+}
+.paw-button.liked {
+  --background: var(--background-active);
+  --border: var(--border-active);
+}
+.paw-button.liked .text {
+  --w: 21px;
+}
+.paw-button.liked .text svg {
+  --o: 1;
+}
+.paw-button.liked > span {
+  --number: var(--number-active);
+}
+
+@-webkit-keyframes confetti {
+  from {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes confetti {
+  from {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+@-webkit-keyframes paw {
+  0% {
+    -webkit-transform: translateX(var(--x));
+            transform: translateX(var(--x));
+  }
+  35% {
+    -webkit-transform: translateX(-16px);
+            transform: translateX(-16px);
+  }
+  55%,
+    70% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  100% {
+    -webkit-transform: translateX(-12px);
+            transform: translateX(-12px);
+  }
+}
+@keyframes paw {
+  0% {
+    -webkit-transform: translateX(var(--x));
+            transform: translateX(var(--x));
+  }
+  35% {
+    -webkit-transform: translateX(-16px);
+            transform: translateX(-16px);
+  }
+  55%,
+    70% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  100% {
+    -webkit-transform: translateX(-12px);
+            transform: translateX(-12px);
+  }
+}
+@-webkit-keyframes paw-clap {
+  50%,
+    70% {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+  }
+}
+@keyframes paw-clap {
+  50%,
+    70% {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0);
+  }
+}
+
+/*玻璃按钮
+颜色：orange、pink、blue、green
+形状：不写默认圆角方形，round（圆边）、skew（两边倾斜）
+质感：glossy（光泽）、glass（玻璃）
+用font-size可以改变按钮大小
+*/
+.button {
+	text-decoration: 		none;
+	font: 					24px/1em 'Droid Sans', sans-serif;
+	font-weight: 			bold;
+	text-shadow: 			rgba(255,255,255,.5) 0 1px 0;
+	-webkit-user-select: 	none;
+	-moz-user-select: 		none;
+	user-select: 			none;
+
+	padding: 				.5em .6em .4em .6em;
+	margin: 				.5em;
+	display: 				inline-block;
+	position: 				relative;
+	
+	-webkit-border-radius: 	8px;
+	-moz-border-radius: 	8px;
+	border-radius: 	8px;
+	
+	border-top: 		1px solid rgba(255,255,255,0.8);
+	border-bottom: 		1px solid rgba(0,0,0,0.1);
+	
+	background-image: 	-webkit-gradient(radial, 50% 0, 100, 50% 0, 0, from( rgba(255,255,255,0) ), to( rgba(255,255,255,0.7) )), url(noise.png);
+	background-image: 	-moz-radial-gradient(top, ellipse cover, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 100%), url(noise.png);
+	background-image: 	gradient(radial, 50% 0, 100, 50% 0, 0, from( rgba(255,255,255,0) ), to( rgba(255,255,255,0.7) )), url(noise.png);
+
+	-webkit-transition: background .2s ease-in-out;
+	-moz-transition: 	background .2s ease-in-out;
+	transition: 		background .2s ease-in-out;
+	
+	color: 				hsl(0, 0%, 40%) !important;
+	background-color: 	hsl(0, 0%, 75%);
+	
+	-webkit-box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+						hsl(0, 0%, 60%) 0 .1em 3px, hsl(0, 0%, 45%) 0 .3em 1px,
+						rgba(0,0,0,0.2) 0 .5em 5px;
+	-moz-box-shadow: 	inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+						hsl(0, 0%, 60%) 0 .1em 3px, hsl(0, 0%, 45%) 0 .3em 1px,
+						rgba(0,0,0,0.2) 0 .5em 5px;
+	box-shadow:		 	inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+						hsl(0, 0%, 60%) 0 .1em 3px, hsl(0, 0%, 45%) 0 .3em 1px,
+						rgba(0,0,0,0.2) 0 .5em 5px;
+}
+/* 橙色 */
+.button.orange {
+	color: 				hsl(39, 100%, 30%) !important;
+	background-color: 	hsl(39, 100%, 50%);
+
+	-webkit-box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(39, 100%, 40%) 0 .1em 3px, hsl(39, 100%, 30%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+	-moz-box-shadow: 	inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(39, 100%, 40%) 0 .1em 3px, hsl(39, 100%, 30%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+	box-shadow:		 	inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(39, 100%, 40%) 0 .1em 3px, hsl(39, 100%, 30%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+}
+.button.orange:hover { 	background-color: hsl(39, 100%, 65%); }
+/* 蓝色 */
+.button.blue {
+	color: 				hsl(208, 50%, 40%) !important;
+	background-color: 	hsl(208, 100%, 75%);
+	
+	-webkit-box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(208, 50%, 55%) 0 .1em 3px, hsl(208, 50%, 40%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+	-moz-box-shadow: 	inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(208, 50%, 55%) 0 .1em 3px, hsl(208, 50%, 40%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+	box-shadow: 		inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(208, 50%, 55%) 0 .1em 3px, hsl(208, 50%, 40%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+}
+.button.blue:hover { 	background-color: hsl(208, 100%, 83%); }
+/* 绿色 */
+.button.green {
+	color: 				hsl(88, 70%, 30%) !important;
+	background-color: 	hsl(88, 70%, 60%);
+	-webkit-box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(88, 70%, 40%) 0 .1em 3px, hsl(88, 70%, 30%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+	-moz-box-shadow: 	inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(88, 70%, 40%) 0 .1em 3px, hsl(88, 70%, 30%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+	box-shadow:		 	inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(88, 70%, 40%) 0 .1em 3px, hsl(88, 70%, 30%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+}
+.button.green:hover { 	background-color: hsl(88, 70%, 75%); }
+/* 粉色 */
+.button.pink {
+	color: 				hsl(340, 100%, 30%) !important;
+	background-color: 	hsl(340, 100%, 75%);
+	-webkit-box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(340, 70%, 50%) 0 .1em 3px, hsl(340, 80%, 40%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+	-moz-box-shadow: 	inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(340, 70%, 50%) 0 .1em 3px, hsl(340, 80%, 40%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+	box-shadow: 		inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em,
+							hsl(340, 70%, 50%) 0 .1em 3px, hsl(340, 80%, 40%) 0 .3em 1px,
+							rgba(0,0,0,0.2) 0 .5em 5px;
+}
+.button.pink:hover { 	background-color: hsl(340, 100%, 83%); }
+
+.button.transparent {
+	color: 	rgba(0,0,0,0.5) !important;
+}
+.button.transparent, .button.transparent:hover, .button.transparent:active {
+	background-color: transparent;
+	background-image: none;
+}
+.button.transparent:hover {
+	opacity: .9;
+}
+
+.button:hover {
+	background-color: 	hsl(0, 0%, 83%);
+}
+
+.button:active {
+	background-image: 	-webkit-gradient(radial, 50% 0, 100, 50% 0, 0, from( rgba(255,255,255,0) ), to( rgba(255,255,255,0) )), url(noise.png);
+	background-image: 	-moz-gradient(radial, 50% 0, 100, 50% 0, 0, from( rgba(255,255,255,0) ), to( rgba(255,255,255,0) )), url(noise.png);
+	background-image: 	gradient(radial, 50% 0, 100, 50% 0, 0, from( rgba(255,255,255,0) ), to( rgba(255,255,255,0) )), url(noise.png);
+
+	-webkit-box-shadow: inset rgba(255,255,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.2) 0 -0.1em .3em,
+							rgba(0,0,0,0.4) 0 .1em 1px,
+							rgba(0,0,0,0.2) 0 .2em 6px;
+	-moz-box-shadow: 	inset rgba(255,255,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.2) 0 -0.1em .3em,
+							rgba(0,0,0,0.4) 0 .1em 1px,
+							rgba(0,0,0,0.2) 0 .2em 6px;
+	box-shadow: 		inset rgba(255,255,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.2) 0 -0.1em .3em,
+							rgba(0,0,0,0.4) 0 .1em 1px,
+							rgba(0,0,0,0.2) 0 .2em 6px;
+							
+	-webkit-transform: 	translateY(.2em);
+	-moz-transform: 	translateY(.2em);
+	transform: 			translateY(.2em);
+}
+
+.button:focus {
+	outline: none;
+	color: rgba(254,255,255,0.9) !important;
+	text-shadow: rgba(0,0,0,0.2) 0 1px 2px;
+}
+
+.button[disabled], .button[disabled]:hover, .button.disabled, .button.disabled:hover {
+	opacity: 			.5;
+	cursor: 			default;
+	color: 				rgba(0,0,0,0.2) !important;
+	text-shadow: 		none !important;
+	background-color: 	rgba(0,0,0,0.05);
+	background-image: 	none;
+	border-top: 		none;
+
+	-webkit-box-shadow: inset rgba(255,254,255,0.4) 0 0.3em .3em, inset rgba(0,0,0,0.1) 0 -0.1em .3em,
+							rgba(0,0,0,0.3) 0 .1em 1px,
+							rgba(0,0,0,0.2) 0 .2em 6px;
+	-moz-box-shadow: 	inset rgba(255,254,255,0.4) 0 0.3em .3em, inset rgba(0,0,0,0.1) 0 -0.1em .3em,
+							rgba(0,0,0,0.3) 0 .1em 1px,
+							rgba(0,0,0,0.2) 0 .2em 6px;
+	box-shadow: 		inset rgba(255,254,255,0.4) 0 0.3em .3em, inset rgba(0,0,0,0.1) 0 -0.1em .3em,
+							rgba(0,0,0,0.3) 0 .1em 1px,
+							rgba(0,0,0,0.2) 0 .2em 6px;
+
+	-webkit-transform: 	translateY(5px);
+	-moz-transform: 	translateY(5px);
+	transform: 			translateY(5px);
+}
+
+.button.glossy:after, .button.glass:after {
+	content: 	"";
+	position: 	absolute; 
+    width: 		90%;
+    height: 	60%;
+    top: 		0;
+    left: 		5%;    
+    
+    -webkit-border-radius: 	.5em .5em 1em 1em / .5em .5em 2em 2em;    
+    -moz-border-radius: 	.5em .5em 1em 1em / .5em .5em 2em 2em;
+    border-radius: 			.5em .5em 1em 1em / .5em .5em 2em 2em;
+    
+    background-image: 		-webkit-gradient(linear, 0% 0, 100% 0, from( rgba(255,255,255,.55) ), to( rgba(255,255,255,.5) ),
+    							color-stop(.5, rgba(255,255,255,0)), color-stop(.8, rgba(255,255,255,0)) );	
+    background-image: 		-moz-linear-gradient(left, rgba(255,255,255,.55), rgba(255,255,255,0) 50%, rgba(255,255,255,0) 80%, rgba(255,255,255,.5) );	
+    background-image: 		gradient(linear, 0% 0, 100% 0, from( rgba(255,255,255,.55) ), to( rgba(255,255,255,.5) ),
+    							color-stop(.5, rgba(255,255,255,0)), color-stop(.8, rgba(255,255,255,0)) );	
+}
+.button.glossy:active:after,
+.button.glass:active:after,
+.button.disabled:after,
+.button[disabled]:after
+ { opacity: .6; }
+
+.button.icon.glossy:after,
+.button.icon.glass:after { height: 75% ; }
+
+.button.glass {
+	text-shadow: rgba(255,255,255,.5) 0 -1px 0, rgba(0,0,0,0.18) 0 .18em .15em;
+}
+.button.glass:active {
+	text-shadow: rgba(255,255,255,.3) 0 1px 0, rgba(0,0,0,0.15) 0 .18em .15em;
+}
+
+/*按钮形状*/
+.round, .round.glossy:after, .round.glass:after { 
+	border-top: none; 
+	-webkit-border-radius: 	1em; 
+	-moz-border-radius: 	1em; 
+	border-radius: 			1em; 
+}
+.skew { 
+	border-top: 			none; 
+	padding-right: 			1.2em;
+	padding-left: 			0.8em;	
+	-webkit-border-radius: 	5em 1em / 5em 1em;  
+	-moz-border-radius: 	5em 1em / 5em 1em;  
+	border-radius: 			5em 1em / 5em 1em;  
+}
+.skew.glossy:after, .skew.glass:after { 	
+	left: 10%;
+	-webkit-border-radius: 	7em 1em / 5em 1em;
+	-moz-border-radius: 	7em 1em / 5em 1em;
+	border-radius: 			7em 1em / 5em 1em;
+}
+.skew.icon { 	
+	padding-right: 			.9em;
+	padding-left: 			.8em;
+}
+
+/*顶部导航栏*/
+ul, li {
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 21px;
+    text-align: left;
+}
+
+#menu {
+    list-style: none;
+    width: 920px;
+    margin: 10px auto 0 auto;
+    height: 43px;
+    padding: 0 10px;
+    border-radius: 10px;
+    background: rgba(30,41,61,0.6);
+    border: 1px solid #002232;
+    box-shadow: inset 0 0 1px #edf9ff;
+}
+
+#menu li {
+    float: left;
+    text-align: center;
+    position: relative;
+    padding: 4px 10px;
+    margin-right: 30px;
+    margin-top: 7px;
+    border: none;
+}
+
+#menu li:hover {
+    border: 1px solid;
+    padding: 4px 9px;
+    background: #F4F4F4;
+    border-radius: 5px 5px 0 0;
+}
+
+#menu li a {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #EEEEEE;
+    display: block;
+    outline: 0;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px $black;
+}
+
+#menu li:hover a {
+    color:#003;
+    text-shadow: 1px 1px 1px #FFFFFF;
+}
+
+#menu li .drop {
+    padding-right: 21px;
+}
+
+#menu li:hover .drop {
+}
+
+.dropdown_1column, .dropdown_2columns, .dropdown_3columns, .dropdown_4columns, .dropdown_5columns {
+    margin: 4px auto;
+    float: left;
+    position: absolute;
+    left: -999em;
+    text-align: left;
+    padding: 10px 5px;
+    border: 1px solid #777777;
+    border-top: none;
+    background: #F4F4F4;
+    border-radius: 0 5px 5px 5px;
+	z-index:3;
+}
+/*各个栏目的宽度*/
+.dropdown_1column {
+    width: 200px;
+}
+
+.dropdown_2columns {
+    width: 140px;
+}
+
+.dropdown_3columns {
+    width: 420px;
+}
+
+.dropdown_4columns {
+    width: 560px;
+}
+
+.dropdown_5columns {
+    width: 760px;
+}
+
+#menu li:hover .dropdown_1column, #menu li:hover .dropdown_2columns, #menu li:hover .dropdown_3columns, #menu li:hover .dropdown_4columns, #menu li:hover .dropdown_5columns {
+    left: -1px;
+    top: auto;
+}
+
+.col_1, .col_2, .col_3, .col_4, .col_5 {
+    display: inline;
+    float: left;
+    position: relative;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+/*栏目中的列宽*/
+.col_1 {
+    width: 130px;
+}
+
+.col_2 {
+    width: 120px;
+}
+
+.col_3 {
+    width: 410px;
+}
+
+.col_4 {
+    width: 550px;
+}
+
+.col_5 {
+    width: 760px;
+}
+
+#menu .menu_right {
+    float: right;
+    margin-right: 10px;/*标题间距*/
+}
+
+#menu li .align_right {
+    border-radius: 5px 0 5px 5px;
+}
+
+#menu li:hover .align_right {
+    left: auto;
+    right: -1px;
+    top: auto;
+}
+
+#menu p, #menu h2, #menu h3, #menu ul li {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 21px;
+    font-size: 12px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #FFFFFF;
+}
+
+#menu h2 {
+    font-size: 21px;
+    font-weight: 400;
+    letter-spacing: -1px;
+    margin: 7px 0 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #666666;
+}
+
+#menu h3 {
+    font-size: 14px;
+    margin: 7px 0 14px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid #888888;
+}
+
+#menu p {
+    line-height: 18px;
+    margin: 0 0 10px 0;
+}
+
+#menu li:hover div a {
+    font-size: 14px;
+    color: #015b86;
+}
+
+#menu li:hover div a:hover {
+    color:#F69;
+}
+
+.strong {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.imgshadow {
+    background: #FFFFFF;
+    padding: 4px;
+    border: 1px solid #777777;
+    margin-top: 5px;
+    box-shadow: 0 0 5px #666666;
+}
+
+.img_left {
+    width: auto;
+    float: left;
+    margin: 5px 15px 5px 5px;
+}
+
+#menu li .black_box {
+    background-color: #333333;
+    color: #eeeeee;
+    text-shadow: 1px 1px 1px $black;
+    padding: 4px 6px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 3px $black;
+}
+
+#menu li ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px 0;
+}
+
+#menu li ul li {
+    font-size: 14px;
+    line-height: 24px;
+    position: relative;
+    text-shadow: 1px 1px 1px $white;
+    padding: 0;
+    margin: 0;
+    float: none;
+    text-align: left;
+    width: 130px;
+}
+
+#menu li ul li:hover {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+#menu li .greybox li {
+    background: #F4F4F4;
+    border: 1px solid #bbbbbb;
+    margin: 0 0 4px 0;
+    padding: 4px 6px;
+    width: 116px;
+    border-radius: 5px;
+}
+
+#menu li .greybox li:hover {
+    background: $white;
+    border: 1px solid #aaaaaa;
+    padding: 4px 6px;
+    margin: 0 0 4px 0;
+}
+
+/*开关*/
+.toggle--checkbox {
+  display: none;
+}
+
+.toggle--btn {
+  display: block;
+  margin: 0 auto;
+  font-size: 14px;
+  font-weight:bold;
+  left:-50px;
+  transition: all 350ms ease-in;
+}
+.toggle--btn:hover {
+  cursor: pointer;
+}
+
+.toggle--btn, .toggle--btn:before, .toggle--btn:after,
+.toggle--checkbox,
+.toggle--checkbox:before,
+.toggle--checkbox:after,
+.toggle--feature,
+.toggle--feature:before,
+.toggle--feature:after {
+  transition: all 250ms ease-in;
+}
+.toggle--btn:before, .toggle--btn:after,
+.toggle--checkbox:before,
+.toggle--checkbox:after,
+.toggle--feature:before,
+.toggle--feature:after {
+  content: '';
+  display: block;
+}
+
+.toggle--knob .toggle--btn {
+  position: relative;
+  width: 80px;
+  height: 26px;
+  text-transform: uppercase;
+  color: #fff;
+  background: #2a2a2a;
+  box-shadow: inset 0 15px 30px -15px #7e7e7e;
+  border-radius: 20px;
+}
+.toggle--knob .toggle--btn:before {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 60%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f1f1;
+  box-shadow: 0 3px 7px 0 #999, inset 0 7px 7px 6px rgba(241, 241, 241, 0.6), inset 0 0 6px 0px #333, inset 0 0 0 13px #ccc, inset 0 0 0 14px #f1f1f1;
+}
+.toggle--knob .toggle--feature {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width:116px;
+  top:-3px;
+  height: 30px;
+  margin-left:-18px;
+  text-shadow: 0 1px 2px #666;
+}
+.toggle--knob .toggle--feature:before, .toggle--knob .toggle--feature:after {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.toggle--knob .toggle--feature:before {
+  content: attr(data-label-off);
+  left: 20%;
+}
+.toggle--knob .toggle--feature:after {
+  content: attr(data-label-on);
+  right: -60%;
+}
+.toggle--knob .toggle--checkbox:checked + .toggle--btn {
+  background: #a4bf4d;
+  box-shadow: inset 0 15px 30px -15px #7b9d25;
+  
+}
+.toggle--knob .toggle--checkbox:checked + .toggle--btn:before {
+  left: 0;
+}
+.toggle--knob .toggle--checkbox:checked + .toggle--btn .toggle--feature:before {
+  left: -60%;
+}
+.toggle--knob .toggle--checkbox:checked + .toggle--btn .toggle--feature:after {
+  right: 20%;
+}
